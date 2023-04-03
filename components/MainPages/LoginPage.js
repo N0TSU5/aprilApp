@@ -29,7 +29,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     manageToken = async () => {
-        const token = await AsyncStorage.getItem('@storage_Key'); 
+      const token = await AsyncStorage.getItem('@order_id'); 
         if(token !== null) {
             if(token != 'reset'){
               navigation.navigate('Home', {'sKey' : token});
@@ -62,7 +62,7 @@ const LoginPage = () => {
 
   const localStore = async (value) => {
     try {
-      await AsyncStorage.setItem('@storage_Key', value);
+      await AsyncStorage.setItem('@order_id', value);
       navigation.navigate('Home', {'sKey' : value});
     } catch (e) {
       console.log(e);
@@ -74,7 +74,8 @@ const LoginPage = () => {
     const checkData = userData.users;
     for(let i=0; i<checkData.length; i++){  
       if(email == checkData[i].email && code == checkData[i].code){
-        localStore(JSON.stringify(checkData[i].id));
+        let datapoint = JSON.stringify(checkData[i].id)
+        localStore("1026468");    
         return;
       }
     }
@@ -125,13 +126,6 @@ const LoginPage = () => {
 
         </KeyboardAvoidingView>
 
-        <Text style={styles.text}
-          onPress={() => Linking.openURL('https://www.transindus.co.uk/enquiry/')}
-        >Don't have a Trip Booked?{'\n'}Make an enquiry
-        </Text>
-   
-        <Image source={PurpleLogo} style={styles.logo}/>
-      
       </ImageBackground> 
     </View>
   </TouchableWithoutFeedback> 
