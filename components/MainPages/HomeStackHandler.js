@@ -12,7 +12,7 @@ import TPHome from '../HomePages/PreTrip/TPHome';
 
 const HomeStackHandler = ({ navigation, route }) => {
     
-    const token = route.params.sKey  
+    const token = parseInt(route.params.sKey)
     const [relative, setRel] = useState();
     const [diff, setDiff] = useState();
     const [minDiff, setMinDiff] = useState();
@@ -23,6 +23,20 @@ const HomeStackHandler = ({ navigation, route }) => {
     const [point, setPoint] = useState();
     const [time, setTime] = useState();
     const [fDate, setFDate] = useState();
+
+    const fetchData = async () => {
+        try{
+            const response = await fetch(`http://137.205.157.163:4375/bookings/${token}`);
+            const json = await response.json();
+            console.log(json)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     useEffect(()=>{ 
             
