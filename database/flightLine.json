@@ -1,0 +1,10 @@
+{
+    {'time': '07:00', title: 'Leave for Heathrow Airport', description: 'This journey should take around 40 minutes'},
+    {'time': '07:45', title: 'Check in your luggage', description: ''},
+    {'time': '08:00', title: 'Security Check', description: ''},
+    {'time': '08:30', title: 'Relax', description: ''},
+    {'time': '09:00', title: 'Gate 9 Opens', description: 'Head over to Gate 9, board the plane with Priority booking'},
+    {'time': '09:40', title: 'Take Off', description: 'Duration: 8 hours\nHave a nice flight'},
+    {'time': '18:00', title: 'Flight Over', description: 'Head over to...'},
+    {'time': '18:30', title: '......', description: '......'},]
+}

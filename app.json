@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "thc1",
+    "slug": "thc1",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/square.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/square.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/square.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/square.png"
+    }
+  }
+}

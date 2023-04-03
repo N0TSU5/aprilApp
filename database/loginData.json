@@ -1,0 +1,33 @@
+{
+    "users": [
+        
+        {   
+            "id" : 1, 
+            "email" : "one@app.com",
+            "code" : "www",
+            "name" : "Chrisopher"
+        },
+        
+        {
+            "id" : 2,
+            "email" : "two@app.com",
+            "code" : "www",
+            "name" : "Marie Curie"
+        },
+
+        {
+            "id" : 3,
+            "email" : "three@app.com",
+            "code" : "www",
+            "name" : "Rene Descartes"
+        },
+
+        {
+            "id" : 4,
+            "email" : "four@app.com",
+            "code" : "www",
+            "name" : "Morbius"
+        }
+
+    ]
+}
