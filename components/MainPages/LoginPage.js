@@ -4,7 +4,6 @@ import userData from '../../database/loginData';
 import BackgroundImage from '../../assets/loginBG4.png';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PurpleLogo from '../../assets/purpleLogo.png';
 import { 
   Image, 
   ImageBackground, 
@@ -32,7 +31,7 @@ const LoginPage = () => {
       const token = await AsyncStorage.getItem('@order_id'); 
         if(token !== null) {
             if(token != 'reset'){
-              navigation.navigate('Home', {'sKey' : token});
+              navigation.navigate('MHome', {'sKey' : token});
             }
         }
     } 
@@ -63,13 +62,12 @@ const LoginPage = () => {
   const localStore = async (value) => {
     try {
       await AsyncStorage.setItem('@order_id', value);
-      navigation.navigate('Home', {'sKey' : value});
+      navigation.navigate('MHome', {'sKey' : value});
     } catch (e) {
       console.log(e);
     }
   }
 
-  // FETCH + VERIFY CODE TO BE REPLACED BY PGSQL QUERY
   const verify = () => {
     const checkData = userData.users;
     for(let i=0; i<checkData.length; i++){  
