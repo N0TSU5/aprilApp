@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   loginText: {
     color: '#ff8533',
     fontSize: 23,
-    fontWeight: 'bold',  
+    fontWeight: 'bold',
   },
   text: {
     color: '#0CBBA6',

@@ -21,7 +21,7 @@ import Contact from './Contact';
 
 const Drawer = createDrawerNavigator();
 
-const TPHome = ({ rela, days, uname, title }) => {
+const TPHome = ({ days, uname, title }) => {
     return (
         <Drawer.Navigator
             initialRouteName="Home"
@@ -55,12 +55,12 @@ const TPHome = ({ rela, days, uname, title }) => {
 };
 
 
-const Home = ({ rela, days, uname, title }) => {
+const Home = () => {
 
     const clearData = async () => {
         try {
             await AsyncStorage.setItem(
-                '@storage_Key',
+                '@order_id',
                 'reset'
             );
         } catch (error) {
@@ -68,37 +68,39 @@ const Home = ({ rela, days, uname, title }) => {
         }
     };
 
-    const logNav = async () => { clearData(); NativeDevSettings.reload() }
+    const logNav = async () => { 
+        clearData()
+        NativeDevSettings.reload() 
+    }
 
-    const dayNoun = (days == '1') ? 'day' : 'days';
-
-    const [departure, setDD] = useState()
-    const [returned, setRD] = useState()
     const [tourname, setTourName] = useState()
-
-    const [relative, setRel] = useState();
+    const [departure, setDeparture] = useState();
+    const [returned, setReturned] = useState();
+    const [relative, setRelative] = useState();
     const [diff, setDiff] = useState();
     const [minDiff, setMinDiff] = useState();
     const [hrDiff, setHrDiff] = useState();
     const [sHrDiff, setSHDiff] = useState();
+    const [partOfDay, setDayPart] = useState();
 
     useEffect(() => {
         const db = new PouchDB('userDB');
         db.allDocs({ limit: 1, include_docs: true })
-          .then((result) => {
-            const firstDoc = result.rows[0].doc;
-            setDD(firstDoc.data.datedeparture);
-            setRD(firstDoc.data.datereturn);
-            setTourName(firstDoc.data.tourname);
-          })
-          .catch((err) => {
-            console.error("tphome error", err);
-          });
+            .then((result) => {
+                const firstDoc = result.rows[0].doc;
+                setDeparture(firstDoc.data.datedeparture);
+                setReturned(firstDoc.data.datereturn);
+                setTourName(firstDoc.data.tourname);
+            })
+            .catch((err) => {
+                console.error("tphome error", err);
+            });
     }, []);
+
 
     useEffect(() => {
 
-        const date1 = moment();
+        const date1 = moment('2019-10-01 20:34', 'YYYY-MM-DD HH:mm');
         const date2 = moment(departure);
         const dateE = moment(returned);
 
@@ -107,39 +109,112 @@ const Home = ({ rela, days, uname, title }) => {
         setDiff(date2.diff(date1, 'days'));
         setMinDiff((date2.diff(date1, 'minutes')) - (60 * hrDiff));
 
-        if (Math.floor(diff) == 0 && moment().isBefore(departure)) {
-            setRel("onF"); setPoint("pre");
-        }
-
-        else if (Math.floor(diff) > 0 && moment().isBefore(departure)) {
-            setRel('pre');
-        }
-
-        else if (moment().isAfter(returned)) {
+        if (Math.floor(diff) == 0 && date1.isBefore(departure)) {
+            setRelative("onD");
+        } else if (Math.floor(diff) == 0 && date1.isAfter(departure)) {
+            setRelative("inD");
+        } else if (Math.floor(diff) > 0 && date1.isBefore(departure)) {
+            setRelative('pre');
+        } else if (date1.isAfter(returned)) {
             if (Math.abs(diff) > 0) {
-                setRel("pst");
+                setRelative("pst");
             }
+        } else if (date1.isAfter(departure) && date1.isBefore(returned)) {
+            setRelative("in");
+        }
+        else {
+            console.log("none")
         }
 
-        else if (moment().isAfter(departure) && moment().isBefore(returned)) {
-            setRel("in");
+        let currentHour = date1.hour()
+        if (currentHour < 12 && currentHour >= 5) {
+            setDayPart('morning')
+        } else if (currentHour < 20 && currentHour >= 12) {
+            setDayPart('afternoon')
+        } else if (currentHour >= 20 || currentHour < 5) {
+            setDayPart('evening')
         }
-    }, [departure, returned])
+
+    }, [[returned, departure]]);
+
+    const dayNoun = (diff == 1) ? 'day' : 'days';
+    const hourNoun = (hrDiff == 1) ? 'hour' : 'hours';
+    const minNoun = (minDiff == 1) ? 'minute' : 'minutes';
+    const hourPhrase = (minDiff == 0) ? `${hrDiff} ${hourNoun}` : `${hrDiff} ${hourNoun}, ${minDiff} ${minNoun}`
 
     return (
 
         <View style={styles.container}>
-            <Text style={styles.greeting}>Hello {diff},</Text>
-            <Text style={styles.countdown}>{tourname}{'\n'}begins in {days} {dayNoun}</Text>
+            
+            {relative == "pre" && (
+                <>
+                    <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
+                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {hrDiff} {dayNoun}</Text>
+                </>
+            )}
 
-            <TouchableOpacity style={styles.button} onPress={logNav}>
-                <Text style={styles.text}>Log Out</Text>
+            {relative == "onD" && (
+                <>
+                    <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
+                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {hourPhrase}</Text>
+                </>
+            )}
+
+            {relative == "in" && (
+                <>
+                    <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
+                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {hourPhrase}</Text>
+                </>
+            )}
+
+            <TouchableOpacity style={buttonStyles.button} onPress={logNav}>
+                <Text style={buttonStyles.buttontext}>Log Out</Text>
             </TouchableOpacity>
 
             <View style={styles.container2}><Image source={PurpleLogo} style={styles.logo} /></View>
         </View>
     )
 }
+
+
+const greetStyles = StyleSheet.create({
+    greeting: {
+        flex: 1,
+        color: '#ff6600',
+        paddingTop: '10%',
+        paddingLeft: '5%',
+        fontSize: 38,
+    },
+    countdown: {
+        flex: 2,
+        color: '#6600cc',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 34
+    },
+})
+
+const buttonStyles = StyleSheet.create({
+    button: {
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        textAlign: 'center',
+        marginHorizontal: '32%',
+        marginBottom: '5%',
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: 'red',
+    },
+    buttontext: {
+        fontSize: 16,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+    },
+})
 
 const styles = StyleSheet.create({
     container2: {
@@ -172,44 +247,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
         borderBottomWidth: 0,
         borderColor: '#4d0019',
-    },
-    greeting: {
-        flex: 1,
-        color: 'white',
-        paddingTop: '10%',
-        paddingLeft: '5%',
-        fontSize: 38,
-        textShadowColor: 'black',
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 1
-    },
-    countdown: {
-        flex: 2,
-        color: 'white',
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        fontSize: 34,
-        textShadowColor: 'black',
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 20
-    },
-    button: {
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        marginHorizontal: '32%',
-        marginBottom: '5%',
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: 'red',
-    },
-    text: {
-        fontSize: 16,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: 'white',
     },
     view: {
         color: '#00e673',

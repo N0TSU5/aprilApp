@@ -10,14 +10,10 @@ import PostTripHome from '../HomePages/PostTrip/PostTripHome';
 import InTripHome from '../HomePages/InTrip/InTripHome';
 import TPHome from '../HomePages/PreTrip/TPHome';
 
-<<<<<<< HEAD
-import Realm from 'realm'
-=======
 import PouchDB from 'pouchdb-react-native';
 import { v4 as uuidv4 } from 'uuid';
 
 const db = new PouchDB('mainDB');
->>>>>>> a07af3ef0d0d51f198f0b62da455c40a9b6aae5f
 
 const HomeStackHandler = ({ navigation, route }) => {
 
