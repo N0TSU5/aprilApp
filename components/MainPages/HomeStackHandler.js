@@ -10,6 +10,8 @@ import PostTripHome from '../HomePages/PostTrip/PostTripHome';
 import InTripHome from '../HomePages/InTrip/InTripHome';
 import TPHome from '../HomePages/PreTrip/TPHome';
 
+import Realm from 'realm'
+
 const HomeStackHandler = ({ navigation, route }) => {
     
     const token = parseInt(route.params.sKey)
