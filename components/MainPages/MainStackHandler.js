@@ -10,7 +10,7 @@ const MainStackHandler = () => {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName={'Login'}>   
-        <Stack.Screen options={{headerShown: false}} name="Home" component={HomeStackHandler}/>
+        <Stack.Screen options={{headerShown: false}} name="MHome" component={HomeStackHandler}/>
         <Stack.Screen options={{headerShown: false}} name="Login" component={Login}/>   
       </Stack.Navigator> 
     </NavigationContainer>

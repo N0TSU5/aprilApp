@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Itenary from '../../InfoPages/Itenary';
+import moment, { min } from 'moment';
+import PouchDB from 'pouchdb-react-native';
 import "../../../ignoreWarnings";
 import BackgroundImage from '../../../assets/temple-coast.png';
 import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';
@@ -20,24 +22,24 @@ import Contact from './Contact';
 const Drawer = createDrawerNavigator();
 
 const TPHome = ({ rela, days, uname, title }) => {
-    return (    
+    return (
         <Drawer.Navigator
             initialRouteName="Home"
             screenOptions={{
                 drawerStyle: {
-                  backgroundColor: '#ffa64d',
-                  width: 200,
+                    backgroundColor: '#ffa64d',
+                    width: 200,
                 },
-                labelStyle: { 
-                    fontSize: 50, 
+                labelStyle: {
+                    fontSize: 50,
                 },
                 drawerActiveTintColor: "#BC4B52",
                 drawerInactiveTintColor: '#000066',
                 headerStyle: {
                     backgroundColor: '#660033',
                 },
-                  headerTintColor: 'orange',
-                  headerTitleStyle: {
+                headerTintColor: 'orange',
+                headerTitleStyle: {
                     fontWeight: 'bold',
                     fontSize: 30
                 },
@@ -51,7 +53,6 @@ const TPHome = ({ rela, days, uname, title }) => {
         </Drawer.Navigator>
     );
 };
-
 
 
 const Home = ({ rela, days, uname, title }) => {
@@ -71,22 +72,72 @@ const Home = ({ rela, days, uname, title }) => {
 
     const dayNoun = (days == '1') ? 'day' : 'days';
 
+    const [departure, setDD] = useState()
+    const [returned, setRD] = useState()
+    const [tourname, setTourName] = useState()
+
+    const [relative, setRel] = useState();
+    const [diff, setDiff] = useState();
+    const [minDiff, setMinDiff] = useState();
+    const [hrDiff, setHrDiff] = useState();
+    const [sHrDiff, setSHDiff] = useState();
+
+    useEffect(() => {
+        const db = new PouchDB('userDB');
+        db.allDocs({ limit: 1, include_docs: true })
+          .then((result) => {
+            const firstDoc = result.rows[0].doc;
+            setDD(firstDoc.data.datedeparture);
+            setRD(firstDoc.data.datereturn);
+            setTourName(firstDoc.data.tourname);
+          })
+          .catch((err) => {
+            console.error("tphome error", err);
+          });
+    }, []);
+
+    useEffect(() => {
+
+        const date1 = moment();
+        const date2 = moment(departure);
+        const dateE = moment(returned);
+
+        setSHDiff(dateE.diff(date1, 'hours'));
+        setHrDiff(date2.diff(date1, 'hours'));
+        setDiff(date2.diff(date1, 'days'));
+        setMinDiff((date2.diff(date1, 'minutes')) - (60 * hrDiff));
+
+        if (Math.floor(diff) == 0 && moment().isBefore(departure)) {
+            setRel("onF"); setPoint("pre");
+        }
+
+        else if (Math.floor(diff) > 0 && moment().isBefore(departure)) {
+            setRel('pre');
+        }
+
+        else if (moment().isAfter(returned)) {
+            if (Math.abs(diff) > 0) {
+                setRel("pst");
+            }
+        }
+
+        else if (moment().isAfter(departure) && moment().isBefore(returned)) {
+            setRel("in");
+        }
+    }, [departure, returned])
+
     return (
 
         <View style={styles.container}>
-            <ImageBackground style={styles.background} source={BackgroundImage}>
-            <Text style={styles.greeting}>Hello {uname},</Text>
-            <Text style={styles.countdown}>{title}{'\n'}begins in {days} {dayNoun}</Text>
+            <Text style={styles.greeting}>Hello {diff},</Text>
+            <Text style={styles.countdown}>{tourname}{'\n'}begins in {days} {dayNoun}</Text>
 
             <TouchableOpacity style={styles.button} onPress={logNav}>
                 <Text style={styles.text}>Log Out</Text>
             </TouchableOpacity>
 
             <View style={styles.container2}><Image source={PurpleLogo} style={styles.logo} /></View>
-            </ImageBackground>
-
         </View>
-
     )
 }
 
@@ -118,7 +169,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         justifyContent: 'center',
         borderWidth: 10,
-        borderTopWidth: 0, 
+        borderTopWidth: 0,
         borderBottomWidth: 0,
         borderColor: '#4d0019',
     },
