@@ -1,61 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Itenary from '../../InfoPages/Itenary';
 import moment, { min } from 'moment';
 import PouchDB from 'pouchdb-react-native';
 import "../../../ignoreWarnings";
-import BackgroundImage from '../../../assets/temple-coast.png';
 import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';
 import PurpleLogo from '../../../assets/greyLogo.png';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
     View,
     Image,
     Text,
     TouchableOpacity,
-    ImageBackground,
     StyleSheet,
-    ScrollView
 } from "react-native";
-import Contact from './Contact';
 
-const Drawer = createDrawerNavigator();
-
-const TPHome = ({ days, uname, title }) => {
-    return (
-        <Drawer.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-                drawerStyle: {
-                    backgroundColor: '#ffa64d',
-                    width: 200,
-                },
-                labelStyle: {
-                    fontSize: 50,
-                },
-                drawerActiveTintColor: "#BC4B52",
-                drawerInactiveTintColor: '#000066',
-                headerStyle: {
-                    backgroundColor: '#660033',
-                },
-                headerTintColor: 'orange',
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    fontSize: 30
-                },
-            }}
-        >
-            <Drawer.Screen name="Home">
-                {props => <Home {...props} days={days} uname={uname} title={title} />}
-            </Drawer.Screen>
-            <Drawer.Screen name="Itinenary" component={Itenary} />
-            <Drawer.Screen name="Contacts" component={Contact} />
-        </Drawer.Navigator>
-    );
-};
-
-
-const Home = () => {
+const TPHome = () => {
 
     const clearData = async () => {
         try {
@@ -97,10 +55,9 @@ const Home = () => {
             });
     }, []);
 
-
     useEffect(() => {
 
-        const date1 = moment('2019-10-01 20:34', 'YYYY-MM-DD HH:mm');
+        const date1 = moment('2019-09-23 20:34', 'YYYY-MM-DD HH:mm');
         const date2 = moment(departure);
         const dateE = moment(returned);
 
@@ -149,7 +106,10 @@ const Home = () => {
             {relative == "pre" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {hrDiff} {dayNoun}</Text>
+                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {diff} {dayNoun}</Text>
+                    <TouchableOpacity style={greetStyles.viewDoc}>
+                        <Text style={greetStyles.viewDocText}>View Travel Document</Text>
+                    </TouchableOpacity>
                 </>
             )}
 
@@ -171,7 +131,7 @@ const Home = () => {
                 <Text style={buttonStyles.buttontext}>Log Out</Text>
             </TouchableOpacity>
 
-            <View style={styles.container2}><Image source={PurpleLogo} style={styles.logo} /></View>
+            <View style={logoStyles.logoContainer}><Image source={PurpleLogo} style={logoStyles.logo} /></View>
         </View>
     )
 }
@@ -190,7 +150,18 @@ const greetStyles = StyleSheet.create({
         color: '#6600cc',
         textAlign: 'center',
         textAlignVertical: 'center',
-        fontSize: 34
+        fontSize: 30
+    },
+    viewDoc: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: '15%',
+    },
+    viewDocText: {
+        color: 'purple',
+        fontSize: 30,
+        textDecorationLine: 'underline',
     },
 })
 
@@ -216,8 +187,8 @@ const buttonStyles = StyleSheet.create({
     },
 })
 
-const styles = StyleSheet.create({
-    container2: {
+const logoStyles = StyleSheet.create({
+    logoContainer: {
         backgroundColor: 'black',
     },
     logo: {
@@ -227,26 +198,13 @@ const styles = StyleSheet.create({
         width: 200,
         alignSelf: 'center',
     },
+})
+
+const styles = StyleSheet.create({
+  
     container: {
         flex: 1,
         textAlignVertical: 'center',
-    },
-    image: {
-        flex: 1,
-        resizeMode: 'cover',
-        justifyContent: 'center',
-        borderWidth: 10,
-        borderTopWidth: 0,
-        borderColor: '#4d0019',
-    },
-    background: {
-        flex: 1,
-        resizeMode: 'cover',
-        justifyContent: 'center',
-        borderWidth: 10,
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
-        borderColor: '#4d0019',
     },
     view: {
         color: '#00e673',
