@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment, { min } from 'moment';
@@ -10,97 +10,117 @@ import PostTripHome from '../HomePages/PostTrip/PostTripHome';
 import InTripHome from '../HomePages/InTrip/InTripHome';
 import TPHome from '../HomePages/PreTrip/TPHome';
 
+import PouchDB from 'pouchdb-react-native';
+import { v4 as uuidv4 } from 'uuid';
+
+const db = new PouchDB('mainDB');
+
 const HomeStackHandler = ({ navigation, route }) => {
-    
-    const token = parseInt(route.params.sKey)
+
     const [relative, setRel] = useState();
     const [diff, setDiff] = useState();
     const [minDiff, setMinDiff] = useState();
     const [hrDiff, setHrDiff] = useState();
     const [sHrDiff, setSHDiff] = useState();
-    const [sMinDiff, setSMDiff] = useState();
     const [name, setName] = useState();
-    const [point, setPoint] = useState();
-    const [time, setTime] = useState();
-    const [fDate, setFDate] = useState();
+
+    const [data, setData] = useState(null);
+    const token = parseInt(route.params.sKey)
+    const dbName = 'userDB'
 
     const fetchData = async () => {
-        try{
-            const response = await fetch(`http://137.205.157.163:4375/bookings/${token}`);
-            const json = await response.json();
-            console.log(json)
-        } catch (error) {
-            console.error(error);
-        }
+        try {
+            const response = await fetch(`http://137.25.157.13:4375/bookings/${token}`)
+            const json = await response.json()
+            setData(json)
+            console.log("aasdas")
+        } catch (error) {}
     }
 
+    const saveData = async () => {
+        try {
+            const db = new PouchDB('userDB')
+            const doc = {
+                _id: uuidv4(),
+                data: data,
+            }
+            await db.put(doc)
+            console.log("saved", doc.data.tourname)
+        } catch (error) {
+            console.error("save error:", error)
+        }
+    } 
+
     useEffect(() => {
-        fetchData()
-    }, [])
+        fetchData();
+    }, []);
 
-    useEffect(()=>{ 
-            
-        const tripFind = tripData.trips; 
-        const token = route.params.sKey  
+    useEffect(() => {
+        if (data) {
+            saveData();
+        }
+    }, [data]);
 
-        for(let i=0; i<tripFind.length; i++){  
-            if(token == tripFind[i].id){
+
+   /* useEffect(() => {
+
+        const tripFind = tripData.trips;
+        const token = route.params.sKey
+
+        for (let i = 0; i < tripFind.length; i++) {
+            if (token == tripFind[i].id) {
 
                 const fDate = tripFind[i].sDate;
                 const eDate = tripFind[i].eDate;
-                const eTime = tripFind[i].eTime;
                 setName(tripFind[i].name);
 
                 const date1 = moment();
                 const date2 = moment(fDate);
-                const dateE = moment(eDate); 
-                
-                setSHDiff(dateE.diff(date1,'hours'));
-                setSMDiff(dateE.diff(date1,'minutes') - (60 * sHrDiff));
+                const dateE = moment(eDate);
 
-                setHrDiff(date2.diff(date1, 'hours')); 
-                setDiff(date2.diff(date1, 'days')); 
+                setSHDiff(dateE.diff(date1, 'hours'));
+                setHrDiff(date2.diff(date1, 'hours'));
+                setDiff(date2.diff(date1, 'days'));
                 setMinDiff((date2.diff(date1, 'minutes')) - (60 * hrDiff));
-                setTime(eTime);
 
-                if(Math.floor(diff) == 0 && moment().isBefore(fDate)) {
-                    setRel("onF"); setPoint("pre"); 
+                if (Math.floor(diff) == 0 && moment().isBefore(fDate)) {
+                    setRel("onF"); setPoint("pre");
                 }
 
-                else if(Math.floor(diff) > 0 && moment().isBefore(fDate)) {
+                else if (Math.floor(diff) > 0 && moment().isBefore(fDate)) {
                     setRel('pre');
                 }
-                
-                else if(moment().isAfter(eDate)) { 
-                    if(Math.abs(diff) > 0){ 
-                        setRel("pst"); 
-                    }                
-                } 
 
-                else if(moment().isAfter(fDate) && moment().isBefore(eDate)) { 
-                    setRel("in"); 
-                }     
-            } 
+                else if (moment().isAfter(eDate)) {
+                    if (Math.abs(diff) > 0) {
+                        setRel("pst");
+                    }
+                }
+
+                else if (moment().isAfter(fDate) && moment().isBefore(eDate)) {
+                    setRel("in");
+                }
+            }
         }
-    }, [diff]);  
+    }, [diff]);*/
 
-    if(relative=='onF'){
-        return(<OnFlightHome name={name} rel={'pre'} hours={hrDiff} mins={minDiff}/>)
+    if (relative == 'onF') {
+        return (<OnFlightHome name={name} rel={'pre'} hours={hrDiff} mins={minDiff} />)
 
-    } else if(relative=='pre'){
-       return(<TPHome rela={relative} days={diff} uname={name} title={'Land of Tigers with Transindus'}/>);
+    } else if (relative == 'pre') {
+        return (<TPHome rela={relative} days={diff} uname={db.data.salesrepemail} title={db.data.tourname} />);
 
-    } else if(relative=='pst'){
-        return(<PostTripHome />)
+    } else if (relative == 'pst') {
+        return (<PostTripHome />)
 
-    } else if(relative=='in'){
-        return(<InTripHome name={name} day={1-diff}/>)
+    } else if (relative == 'in') {
+        return (<InTripHome name={name} day={1 - diff} />)
 
-    } else{
-        return(<Text>{relative}</Text>)
+    } else {
+        return (<TPHome/>)
     }
-    
-    }
+
+}
 
 
 export default HomeStackHandler
