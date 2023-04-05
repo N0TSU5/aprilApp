@@ -1,12 +1,10 @@
 import React from "react";
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Itenary from "../oldComponents/InfoPages/Itenary";
-import Contact from "../oldComponents/HomePages/PreTrip/Contact";
-import TPHome from "./HomePage";
+import HomePage from "./HomePage";
 
 const Drawer = createDrawerNavigator();
 
-const HomeDrawer = ({ days, uname, title }) => {
+const HomeDrawer = () => {
     return (
         <Drawer.Navigator
             initialRouteName="Home"
@@ -30,9 +28,7 @@ const HomeDrawer = ({ days, uname, title }) => {
                 },
             }}
         >
-            <Drawer.Screen name="Home" component={TPHome} />
-            <Drawer.Screen name="Itinenary" component={Itenary} />
-            <Drawer.Screen name="Contacts" component={Contact} />
+            <Drawer.Screen name="Home" component={HomePage} />
         </Drawer.Navigator>
     );
 };

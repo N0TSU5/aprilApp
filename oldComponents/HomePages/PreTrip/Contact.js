@@ -1,5 +1,4 @@
 import React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Itenary from '../../InfoPages/Itenary';
 import "../../../ignoreWarnings";
 import BackgroundImage from '../../../assets/temple-coast.png';

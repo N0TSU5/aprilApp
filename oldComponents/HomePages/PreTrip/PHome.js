@@ -1,6 +1,5 @@
 import React from 'react';
 import BackgroundImage from '../../../assets/rajasthan.png';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Itenary from '../../InfoPages/Itenary';
 import "../../../ignoreWarnings";
 import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';

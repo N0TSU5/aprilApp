@@ -1,6 +1,5 @@
 import React from 'react';
 import BackgroundImage from '../../../assets/loginBG4.png';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import "../../../ignoreWarnings";
 import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';
 import greyLogo from '../../../assets/greyLogo.png';

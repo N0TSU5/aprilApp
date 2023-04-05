@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import userData from '../database/loginData';
 import BackgroundImage from '../assets/loginBG4.png';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   ImageBackground,
   StyleSheet,
