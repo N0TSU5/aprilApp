@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment, { min } from 'moment';
 import PouchDB from 'pouchdb-react-native';
-import "../../../ignoreWarnings";
+import "../ignoreWarnings";
 import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';
-import PurpleLogo from '../../../assets/greyLogo.png';
+import PurpleLogo from '../assets/greyLogo.png';
 import {
     View,
     Image,
@@ -13,7 +13,7 @@ import {
     StyleSheet,
 } from "react-native";
 
-const TPHome = () => {
+const HomePage = () => {
 
     const clearData = async () => {
         try {
@@ -26,9 +26,9 @@ const TPHome = () => {
         }
     };
 
-    const logNav = async () => { 
+    const logNav = async () => {
         clearData()
-        NativeDevSettings.reload() 
+        NativeDevSettings.reload()
     }
 
     const [tourname, setTourName] = useState()
@@ -79,9 +79,6 @@ const TPHome = () => {
         } else if (date1.isAfter(departure) && date1.isBefore(returned)) {
             setRelative("in");
         }
-        else {
-            console.log("none")
-        }
 
         let currentHour = date1.hour()
         if (currentHour < 12 && currentHour >= 5) {
@@ -101,15 +98,12 @@ const TPHome = () => {
 
     return (
 
-        <View style={styles.container}>
-            
+        <View style={containerStyles.container}>
+
             {relative == "pre" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
                     <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {diff} {dayNoun}</Text>
-                    <TouchableOpacity style={greetStyles.viewDoc}>
-                        <Text style={greetStyles.viewDocText}>View Travel Document</Text>
-                    </TouchableOpacity>
                 </>
             )}
 
@@ -200,8 +194,7 @@ const logoStyles = StyleSheet.create({
     },
 })
 
-const styles = StyleSheet.create({
-  
+const containerStyles = StyleSheet.create({
     container: {
         flex: 1,
         textAlignVertical: 'center',
@@ -219,4 +212,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default TPHome
+export default HomePage

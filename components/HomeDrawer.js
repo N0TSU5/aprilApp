@@ -1,12 +1,12 @@
 import React from "react";
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Itenary from "../../InfoPages/Itenary";
-import Contact from "./Contact";
-import TPHome from "./TPHome";
+import Itenary from "../oldComponents/InfoPages/Itenary";
+import Contact from "../oldComponents/HomePages/PreTrip/Contact";
+import TPHome from "./HomePage";
 
 const Drawer = createDrawerNavigator();
 
-const DPHome = ({ days, uname, title }) => {
+const HomeDrawer = ({ days, uname, title }) => {
     return (
         <Drawer.Navigator
             initialRouteName="Home"
@@ -37,4 +37,4 @@ const DPHome = ({ days, uname, title }) => {
     );
 };
 
-export default DPHome
+export default HomeDrawer

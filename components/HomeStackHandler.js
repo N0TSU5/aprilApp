@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import DPHome from '../HomePages/PreTrip/DPHome';
+import DPHome from './HomeDrawer';
 import PouchDB from 'pouchdb-react-native';
 import { v4 as uuidv4 } from 'uuid';
 
