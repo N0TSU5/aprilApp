@@ -57,7 +57,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment('2019-09-23 20:34', 'YYYY-MM-DD HH:mm');
+        const date1 = moment('2019-09-23 12:11', 'YYYY-MM-DD HH:mm');
         const date2 = moment(departure);
         const dateE = moment(returned);
 
@@ -134,7 +134,7 @@ const HomePage = () => {
 const greetStyles = StyleSheet.create({
     greeting: {
         flex: 1,
-        color: '#ff6600',
+        color: '#6600cc',
         paddingTop: '10%',
         paddingLeft: '5%',
         fontSize: 38,
@@ -142,7 +142,8 @@ const greetStyles = StyleSheet.create({
     countdown: {
         flex: 2,
         color: '#6600cc',
-        textAlign: 'center',
+        textAlign: 'left',
+        paddingLeft: '5%',
         textAlignVertical: 'center',
         fontSize: 30
     },

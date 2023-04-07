@@ -32,7 +32,7 @@ const HomeDrawer = () => {
         >
             <Drawer.Screen name="Home" component={HomePage} />
             <Drawer.Screen name="Introduction" component={IntroDoc} />
-            <Drawer.Screen name="Itinenary" component={Itinenary} />
+            <Drawer.Screen name="Itinerary" component={Itinenary} />
         </Drawer.Navigator>
     );
 };
