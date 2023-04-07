@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import "../ignoreWarnings";
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
-import moment from 'moment'
 import { useWindowDimensions } from 'react-native';
 import {
     StyleSheet,
@@ -11,11 +10,27 @@ import {
     Text
 } from "react-native";
 
+const WebDisplay = React.memo(function WebDisplay({ html }) {
+    const { width: contentWidth } = useWindowDimensions();
+    const tagsStyles = {
+        a: {
+            textDecorationLine: 'none',
+        },
+    };
+
+    return (
+        <RenderHTML
+            contentWidth={contentWidth}
+            source={{ html }}
+            tagsStyles={tagsStyles}
+            ignoredDomTags={['font']}
+        />
+    );
+});
+
 const Footnotes = () => {
 
-    const { width } = useWindowDimensions();
     const [footnotes, setList] = useState([])
-
     useEffect(() => {
         const db = new PouchDB('userDB');
         db.allDocs({ limit: 1, include_docs: true })
@@ -29,13 +44,50 @@ const Footnotes = () => {
             });
     }, []);
 
-
+    for (let i = 0; i < footnotes.length; i++) {
+        if (footnotes[i].section == null) {
+            footnotes[i].section = "";
+        }
+        footnotes[i].section = footnotes[i].section.replace(/"/g, '\'');
+        footnotes[i].lettertext = footnotes[i].lettertext.replace(/"/g, '\'');
+        footnotes[i].lettertext = footnotes[i].lettertext.replace(/\n|\r/g, '');
+        footnotes[i].lettertext = footnotes[i].lettertext.replace(/\s\s+/g, ' ');
+        footnotes[i].lettertext = footnotes[i].lettertext.replace(/<font.*?>/gi, "").replace(/<\/font>/gi, "");
+    }
 
     return (
         <ScrollView>
-          
+            {footnotes.map((item, index) => (
+                <View style={styles.container} key={index}>
+                    <Text style={styles.title}>{item.section}</Text>
+                    <WebDisplay html={item.lettertext} />
+                </View>
+            ))}
         </ScrollView>
     )
 }
 
-export default Footnotes
+const styles = StyleSheet.create({
+    container: {
+        padding: 10,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        marginHorizontal: 10,
+        marginTop: 10,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    title: {
+        fontWeight: 'bold',
+        color: '#660033'
+    }
+});
+
+export default Footnotes;
