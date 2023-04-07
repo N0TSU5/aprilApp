@@ -10,7 +10,8 @@ if (__DEV__) {
     "exported from 'deprecated-react-native-prop-types'.",
     "Non-serializable values were found in the navigation state.",
     "VirtualizedLists should never be nested inside plain ScrollViews",
-    'Each child in a list should have a unique "key" prop'
+    'Each child in a list should have a unique "key" prop',
+    "AsyncStorage has been extracted from react-native core and will be removed in a future release."
   ];
 
   const warn = console.warn;
