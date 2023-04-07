@@ -3,6 +3,7 @@ import "../ignoreWarnings";
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
 import moment from 'moment'
+import LoadingScreen from './LoadingScreen';
 import { useWindowDimensions } from 'react-native';
 import {
     StyleSheet,
@@ -11,8 +12,27 @@ import {
     Text
 } from "react-native";
 
+const WebDisplay = React.memo(function WebDisplay({ html }) {
+    const { width: contentWidth } = useWindowDimensions();
+    const tagsStyles = {
+        a: {
+            textDecorationLine: 'none',
+        },
+    };
+
+    return (
+        <RenderHTML
+            contentWidth={contentWidth}
+            source={{ html }}
+            tagsStyles={tagsStyles}
+            ignoredDomTags={['font']}
+        />
+    );
+});
+
 const Itinenary = () => {
 
+    const [isLoading, setIsLoading] = useState(true);
     const { width } = useWindowDimensions();
     const [itinerary, setList] = useState([])
 
@@ -23,6 +43,7 @@ const Itinenary = () => {
                 const firstDoc = result.rows[0].doc;
                 const itineraryObj = firstDoc.data.itinerary
                 setList(Object.keys(itineraryObj).map(key => itineraryObj[key]))
+                setIsLoading(false);
             })
             .catch((err) => {
                 console.error("tphome error", err);
@@ -73,23 +94,28 @@ const Itinenary = () => {
         } else {
             formattedList.push([itemIndex, itemDate, "", itemDescription, itemFooter])
         }
-
     }
 
     return (
-        <ScrollView>
-            {formattedList.map((item, index) => (
-                <View style={styles.container}>
-                    <View style={{ flexDirection: 'row'}}>
-                        <Text style={styles.title}>Day {item[0]} {item[1]} |</Text>
-                        <RenderHTML source={{ html: item[2] }} baseStyle={styles.title} contentWidth={width} />
-                    </View>
-                    <RenderHTML source={{ html: item[3] }} contentWidth={width} />
-                    <RenderHTML source={{ html: item[4] }} contentWidth={width} />
-                </View>
-            ))}
-        </ScrollView>
-    )
+        <React.Fragment>
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (
+                <ScrollView>
+                    {formattedList.map((item, index) => (
+                        <View style={styles.container} key={index}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.title}>Day {item[0]} {item[1]} |</Text>
+                                <RenderHTML source={{ html: item[2] }} baseStyle={styles.title} contentWidth={width} />
+                            </View>
+                            <WebDisplay html={item[3]} />
+                            <WebDisplay html={item[3]} />
+                        </View>
+                    ))}
+                </ScrollView>
+            )}
+        </React.Fragment>
+    );
 }
 
 const styles = StyleSheet.create({

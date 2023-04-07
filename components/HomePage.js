@@ -134,14 +134,14 @@ const HomePage = () => {
 const greetStyles = StyleSheet.create({
     greeting: {
         flex: 1,
-        color: '#6600cc',
+        color: '#660033',
         paddingTop: '10%',
         paddingLeft: '5%',
         fontSize: 38,
     },
     countdown: {
         flex: 2,
-        color: '#6600cc',
+        color: '#660033',
         textAlign: 'left',
         paddingLeft: '5%',
         textAlignVertical: 'center',
