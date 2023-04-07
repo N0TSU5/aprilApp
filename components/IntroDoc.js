@@ -2,19 +2,16 @@ import React, { useEffect, useState } from 'react';
 import "../ignoreWarnings";
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
+import { useWindowDimensions } from 'react-native';
 import {
-    View,
-    Image,
-    Text,
-    TouchableOpacity,
-    ImageBackground,
     StyleSheet,
     ScrollView
 } from "react-native";
 
 const IntroDoc = () => {
-
-    const [letter, setLetter] = useState()
+    
+    const { width } = useWindowDimensions();
+    const [letter, setLetter] = useState('')
 
     useEffect(() => {
         const db = new PouchDB('userDB');
@@ -30,7 +27,7 @@ const IntroDoc = () => {
 
     return (
         <ScrollView>
-            <RenderHTML source={{ html: letter }} tagsStyles={markupStyles} />
+            <RenderHTML source={{ html: letter }} tagsStyles={markupStyles} contentWidth={width} />
         </ScrollView>
     )
 }

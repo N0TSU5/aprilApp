@@ -2,6 +2,7 @@ import React from "react";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomePage from "./HomePage";
 import IntroDoc from "./IntroDoc"
+import Itinenary from "./Itinenary";
 
 const Drawer = createDrawerNavigator();
 
@@ -31,6 +32,7 @@ const HomeDrawer = () => {
         >
             <Drawer.Screen name="Home" component={HomePage} />
             <Drawer.Screen name="Introduction" component={IntroDoc} />
+            <Drawer.Screen name="Itinerary" component={Itinenary} />
         </Drawer.Navigator>
     );
 };
