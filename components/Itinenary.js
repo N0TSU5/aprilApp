@@ -109,7 +109,7 @@ const Itinenary = () => {
                                 <RenderHTML source={{ html: item[2] }} baseStyle={styles.title} contentWidth={width} />
                             </View>
                             <WebDisplay html={item[3]} />
-                            <WebDisplay html={item[3]} />
+                            <WebDisplay html={item[4]} />
                         </View>
                     ))}
                 </ScrollView>

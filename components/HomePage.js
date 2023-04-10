@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment, { min } from 'moment';
 import PouchDB from 'pouchdb-react-native';
 import "../ignoreWarnings";
+import { useNavigation } from '@react-navigation/native';
 import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';
 import PurpleLogo from '../assets/greyLogo.png';
 import {
@@ -14,6 +15,8 @@ import {
 } from "react-native";
 
 const HomePage = () => {
+
+    const navigation = useNavigation();
 
     const clearData = async () => {
         try {
@@ -28,7 +31,7 @@ const HomePage = () => {
 
     const logNav = async () => {
         clearData()
-        NativeDevSettings.reload()
+        navigation.navigate("Login")
     }
 
     const [tourname, setTourName] = useState()
