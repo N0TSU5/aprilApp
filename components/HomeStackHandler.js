@@ -11,11 +11,12 @@ const HomeStackHandler = ({ navigation, route }) => {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://137.25.157.13:4375/bookings/${token}`)
+            const response = await fetch(`http://137.205.157.163:4375/bookings/${token}`)
             const json = await response.json()
             setData(json)
-            console.log("aasdas")
-        } catch (error) {}
+        } catch (error) {
+            console.log("home stack error", error)
+        }
     }
 
     const saveData = async () => {
@@ -28,7 +29,7 @@ const HomeStackHandler = ({ navigation, route }) => {
             await db.put(doc)
             console.log("saved", doc.data.tourname)
         } catch (error) {
-            console.error("save error:", error)
+            console.log("save error:", error)
         }
     } 
 

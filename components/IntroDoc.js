@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "../ignoreWarnings";
 import PouchDB from 'pouchdb-react-native';
+import LoadingScreen from './LoadingScreen';
 import RenderHTML from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
 import {
@@ -12,6 +13,7 @@ const IntroDoc = () => {
     
     const { width } = useWindowDimensions();
     const [letter, setLetter] = useState('')
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const db = new PouchDB('userDB');
@@ -19,6 +21,7 @@ const IntroDoc = () => {
             .then((result) => {
                 const firstDoc = result.rows[0].doc;
                 setLetter((firstDoc.data.letter));
+                setIsLoading(false);
             })
             .catch((err) => {
                 console.error("tphome error", err);
@@ -26,10 +29,16 @@ const IntroDoc = () => {
     }, []);
 
     return (
+        <React.Fragment>
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (
         <ScrollView>
             <RenderHTML source={{ html: letter }} tagsStyles={markupStyles} contentWidth={width} />
         </ScrollView>
-    )
+            )}
+        </React.Fragment>
+        )
 }
 
 const markupStyles = StyleSheet.create({

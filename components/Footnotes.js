@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "../ignoreWarnings";
+import LoadingScreen from './LoadingScreen';
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
@@ -31,6 +32,8 @@ const WebDisplay = React.memo(function WebDisplay({ html }) {
 const Footnotes = () => {
 
     const [footnotes, setList] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const db = new PouchDB('userDB');
         db.allDocs({ limit: 1, include_docs: true })
@@ -38,6 +41,7 @@ const Footnotes = () => {
                 const firstDoc = result.rows[0].doc;
                 const footnotesObj = firstDoc.data.footnotes
                 setList(Object.keys(footnotesObj).map(key => footnotesObj[key]))
+                setIsLoading(false);
             })
             .catch((err) => {
                 console.error("tphome error", err);
@@ -56,6 +60,10 @@ const Footnotes = () => {
     }
 
     return (
+        <React.Fragment>
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (
         <ScrollView>
             {footnotes.map((item, index) => (
                 <View style={styles.container} key={index}>
@@ -64,6 +72,8 @@ const Footnotes = () => {
                 </View>
             ))}
         </ScrollView>
+        )}
+        </React.Fragment>
     )
 }
 
