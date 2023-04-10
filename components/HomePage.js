@@ -54,7 +54,7 @@ const HomePage = () => {
                 setTourName(firstDoc.data.tourname);
             })
             .catch((err) => {
-                console.error("tphome error", err);
+                console.error("home page error", err);
             });
     }, []);
 
