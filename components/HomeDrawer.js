@@ -3,6 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomePage from "./HomePage";
 import IntroDoc from "./IntroDoc"
 import Itinenary from "./Itinenary";
+import Accomodation from "./Accomodation"
 import Footnotes from "./Footnotes";
 
 const Drawer = createDrawerNavigator();
@@ -27,13 +28,14 @@ const HomeDrawer = () => {
                 headerTintColor: 'orange',
                 headerTitleStyle: {
                     fontWeight: 'bold',
-                    fontSize: 30
+                    fontSize: 25
                 },
             }}
         >
             <Drawer.Screen name="Home" component={HomePage} />
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
+            <Drawer.Screen name="Accommodation" component={Accomodation} />
             <Drawer.Screen name="Footnotes" component={Footnotes} />
         </Drawer.Navigator>
     );

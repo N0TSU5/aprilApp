@@ -27,7 +27,6 @@ const HomeStackHandler = ({ navigation, route }) => {
                 data: data,
             }
             await db.put(doc)
-            console.log("saved", doc.data.tourname)
         } catch (error) {
             console.log("save error:", error)
         }

@@ -28,7 +28,7 @@ const LoginPage = () => {
     manageToken = async () => {
       const token = await AsyncStorage.getItem('@order_id');
       if (token !== null) {
-        if (token != 'reset') {
+        if (token != 'null') {
           navigation.navigate('MHome', { 'sKey': token });
         }
       }
