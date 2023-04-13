@@ -5,6 +5,7 @@ import IntroDoc from "./IntroDoc"
 import Itinenary from "./Itinenary";
 import Accomodation from "./Accomodation"
 import Footnotes from "./Footnotes";
+import KeyContacts from "./KeyContacts";
 
 const Drawer = createDrawerNavigator();
 
@@ -36,6 +37,7 @@ const HomeDrawer = () => {
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
             <Drawer.Screen name="Accommodation" component={Accomodation} />
+            <Drawer.Screen name="Key Contacts" component={KeyContacts} />
             <Drawer.Screen name="Footnotes" component={Footnotes} />
         </Drawer.Navigator>
     );
