@@ -3,12 +3,14 @@ import "../ignoreWarnings";
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
 import moment from 'moment'
+import { Feather } from '@expo/vector-icons'; 
 import LoadingScreen from './LoadingScreen';
 import { useWindowDimensions } from 'react-native';
 import {
     StyleSheet,
     View,
     ScrollView,
+    TouchableOpacity,
     Text
 } from "react-native";
 
@@ -30,10 +32,36 @@ const WebDisplay = React.memo(function WebDisplay({ html }) {
     );
 });
 
+const CollapsibleItem = ({ item }) => {
+    const [collapsed, setCollapsed] = useState(true);
+    const { width } = useWindowDimensions();
+
+    return (
+        <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setCollapsed(!collapsed)}
+            style={styles.container}
+        >
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <Feather name={collapsed ? 'chevron-down' : 'chevron-up'} size={24} color="black" />
+                </View>
+            </View>
+            <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', }} contentWidth={width} />
+            {!collapsed && (
+                <React.Fragment>
+                    <WebDisplay html={item[3]} />
+                    <WebDisplay html={item[4]} />
+                </React.Fragment>
+            )}
+        </TouchableOpacity>
+    );
+}
+
 const Itinenary = () => {
 
-    const [isLoading, setIsLoading] = useState(true);
-    const { width } = useWindowDimensions();
+    const [isLoading, setIsLoading] = useState(true); 
     const [itinerary, setList] = useState([])
 
     useEffect(() => {
@@ -46,7 +74,7 @@ const Itinenary = () => {
                 setIsLoading(false);
             })
             .catch((err) => {
-                console.error("tphome error", err);
+                console.error("itinerary error", err);
             });
     }, []);
 
@@ -103,14 +131,7 @@ const Itinenary = () => {
             ) : (
                 <ScrollView>
                     {formattedList.map((item, index) => (
-                        <View style={styles.container} key={index}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.title}>Day {item[0]} {item[1]} |</Text>
-                                <RenderHTML source={{ html: item[2] }} baseStyle={styles.title} contentWidth={width} />
-                            </View>
-                            <WebDisplay html={item[3]} />
-                            <WebDisplay html={item[4]} />
-                        </View>
+                        <CollapsibleItem item={item} key={index} />
                     ))}
                 </ScrollView>
             )}
@@ -135,10 +156,6 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    title: {
-        fontWeight: 'bold',
-        color: '#660033'
-    }
 });
 
 export default Itinenary

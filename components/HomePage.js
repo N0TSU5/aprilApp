@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment, { min } from 'moment';
+import moment from 'moment-timezone';
 import PouchDB from 'pouchdb-react-native';
 import "../ignoreWarnings";
 import { useNavigation } from '@react-navigation/native';
-import NativeDevSettings from 'react-native/Libraries/NativeModules/specs/NativeDevSettings';
 import PurpleLogo from '../assets/greyLogo.png';
 import {
     View,
@@ -22,7 +21,7 @@ const HomePage = () => {
         try {
             await AsyncStorage.setItem(
                 '@order_id',
-                'reset'
+                'null'
             );
         } catch (error) {
             alert('error logging out!');
@@ -60,20 +59,16 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment('2019-09-23 12:11', 'YYYY-MM-DD HH:mm');
-        const date2 = moment(departure);
-        const dateE = moment(returned);
+        const date1 = moment.tz('2019-10-03 23:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date2 = moment.tz(departure, 'GMT')
+        const dateE = moment.tz(returned, 'GMT')
 
         setSHDiff(dateE.diff(date1, 'hours'));
         setHrDiff(date2.diff(date1, 'hours'));
-        setDiff(date2.diff(date1, 'days'));
+        setDiff((date2.diff(date1, 'days')));
         setMinDiff((date2.diff(date1, 'minutes')) - (60 * hrDiff));
 
-        if (Math.floor(diff) == 0 && date1.isBefore(departure)) {
-            setRelative("onD");
-        } else if (Math.floor(diff) == 0 && date1.isAfter(departure)) {
-            setRelative("inD");
-        } else if (Math.floor(diff) > 0 && date1.isBefore(departure)) {
+        if (date1.isBefore(departure)) {
             setRelative('pre');
         } else if (date1.isAfter(returned)) {
             if (Math.abs(diff) > 0) {
@@ -95,9 +90,7 @@ const HomePage = () => {
     }, [[returned, departure]]);
 
     const dayNoun = (diff == 1) ? 'day' : 'days';
-    const hourNoun = (hrDiff == 1) ? 'hour' : 'hours';
-    const minNoun = (minDiff == 1) ? 'minute' : 'minutes';
-    const hourPhrase = (minDiff == 0) ? `${hrDiff} ${hourNoun}` : `${hrDiff} ${hourNoun}, ${minDiff} ${minNoun}`
+    const hourPhrase = (diff > 0) ? `in ${diff} ${dayNoun}` : "tomorrow"
 
     return (
 
@@ -106,21 +99,14 @@ const HomePage = () => {
             {relative == "pre" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {diff} {dayNoun}</Text>
-                </>
-            )}
-
-            {relative == "onD" && (
-                <>
-                    <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {hourPhrase}</Text>
+                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins {hourPhrase}</Text>
                 </>
             )}
 
             {relative == "in" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-                    <Text style={greetStyles.countdown}>{tourname}{'\n'}begins in {hourPhrase}</Text>
+                    <Text style={greetStyles.countdown}>Day {Math.abs(diff)+1}</Text>
                 </>
             )}
 
