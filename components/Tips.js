@@ -56,7 +56,6 @@ const Tips = () => {
         formattedList.push(currentItem.headline)
         formattedList.push(currentItem.lettertext)
     }
-    console.log(formattedList)
  
     return (
         <React.Fragment>
