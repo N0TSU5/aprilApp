@@ -106,7 +106,7 @@ const HomePage = () => {
             {relative == "in" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-                    <Text style={greetStyles.countdown}>Day {Math.abs(diff)+1}</Text>
+                    <Text style={greetStyles.countdown}>Day {Math.abs(diff)+1} of {tourname}</Text>
                 </>
             )}
 
