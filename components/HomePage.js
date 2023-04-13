@@ -101,7 +101,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2019-10-06 10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2019-10-09  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 
@@ -153,14 +153,13 @@ const HomePage = () => {
             }
             groupedItinerary.push(currentGroup);
         }
-        console.log(groupedItinerary[0])
         const formattedList = []
 
         for (let i = 0; i < groupedItinerary.length; i++) {
 
             const currentItem = groupedItinerary[i]
             const currentLocation = currentItem[0].description
-            const itemDate = moment(currentItem[0].datestart).format('dddd D MMMM'); console.log(currentItem.datestart)
+            const itemDate = moment(currentItem[0].datestart).format('dddd D MMMM');
             const itemIndex = i + 1
             const itemFooter = (currentItem[0].footer === null) ? '' : currentItem[0].footer
 
@@ -192,24 +191,23 @@ const HomePage = () => {
 
             <Modal
                 visible={modalVisible}
-                animationType='fade'
+                animationType='slide'
                 transparent={true}
             >
                 <View style={modalStyles.modalContainer}>
-                    <ScrollView>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
-                        </View>
-                        <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
+                    </View>
+                    <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
+                    <ScrollView style={{  borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10}}>                    
                         <React.Fragment>
                             <WebDisplay html={item[3]} />
                             <WebDisplay html={item[4]} />
-
                         </React.Fragment>
-                        <TouchableOpacity onPress={() => setModalVisible(false)}>
-                            <Text style={{ color: 'red', fontSize: 20 }}>{'\n'}Close itinerary</Text>
-                        </TouchableOpacity>
                     </ScrollView>
+                    <TouchableOpacity onPress={() => setModalVisible(false)}>
+                        <Text style={{ color: 'red', fontSize: 20 }}>{'\n'}Close itinerary</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
 
@@ -223,10 +221,14 @@ const HomePage = () => {
             {relative == "in" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
+<<<<<<< Updated upstream
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
                     </TouchableOpacity>
+=======
+                    <Text style={greetStyles.countdown}>Day {Math.abs(diff)+1} of {tourname}</Text>
+>>>>>>> Stashed changes
                 </>
             )}
 
@@ -245,9 +247,14 @@ const modalStyles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         width: '80%',
+        height: '60%',
         alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: '25%',
     },
-})
+});
 
 const greetStyles = StyleSheet.create({
     greeting: {
