@@ -162,7 +162,7 @@ const HomePage = () => {
             const itemDate = moment(currentItem[0].datestart).format('dddd D MMMM');
             const itemIndex = i + 1
             const itemFooter = (currentItem[0].footer === null) ? '' : currentItem[0].footer
-
+console.log(currentLocation)
             let itemDescription = ''
             for (let j = 0; j < currentItem.length; j++) {
                 const cDesc = currentItem[j].description
@@ -176,7 +176,7 @@ const HomePage = () => {
                 formattedList.push([itemIndex, itemDate, currentLocation, itemDescription, itemFooter])
             } else {
                 formattedList.push([itemIndex, itemDate, "", itemDescription, itemFooter])
-            }
+            } 
         }
         setItem(formattedList[day])
         setModalVisible(true)

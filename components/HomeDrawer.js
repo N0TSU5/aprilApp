@@ -7,6 +7,7 @@ import Accomodation from "./Accomodation"
 import Footnotes from "./Footnotes";
 import KeyContacts from "./KeyContacts";
 import Tips from "./Tips";
+import Map from "./Map";
 
 const Drawer = createDrawerNavigator();
 
@@ -41,6 +42,7 @@ const HomeDrawer = () => {
             <Drawer.Screen name="Key Contacts" component={KeyContacts} />
             <Drawer.Screen name="Tips" component={Tips} />
             <Drawer.Screen name="Footnotes" component={Footnotes} />
+            <Drawer.Screen name="Map" component={Map} />
         </Drawer.Navigator>
     );
 };
