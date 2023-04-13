@@ -67,11 +67,18 @@ const Accomodation = () => {
                 <LoadingScreen />
             ) : (
                 <ScrollView>
+                    <View style={styles.container}>
+                        <Text style={styles.instructions}>To call from within the city dial number only. {'\n'}To call from outside the city dial city code (including zero) and number. {'\n'}To call from UK, dial 00 then country code (see below), city code (EXCLUDING zero) and number.</Text>
+                    </View>
                     {formattedList.map((item, index) => (
                         <View style={styles.container} key={index}>
-                            <View style={{ flexDirection: 'column' }}>
+                            <View>
                                 <Text style={styles.title}>Hotel: {item[3]}</Text>
-                                <RenderHTML source={{ html: item[1] }} contentWidth={width} />
+                                <Text>{'\n'}{item[1]}{'\n'}</Text>
+                            </View>
+                            <View>
+                                <Text>Address: {item[2]}</Text>
+                                <Text>Tel: {item[3]}</Text>
                             </View>
                         </View>
                     ))}
@@ -101,6 +108,10 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         color: '#660033'
+    },
+    instructions: {
+        fontSize: 16,
+        lineHeight: 24
     }
 });
 
