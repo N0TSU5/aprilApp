@@ -77,8 +77,8 @@ const Accomodation = () => {
                                 <Text>{'\n'}{item[1]}{'\n'}</Text>
                             </View>
                             <View>
-                                <Text>Address: {item[2]}</Text>
-                                <Text>Tel: {item[3]}</Text>
+                                <Text>Address: {'\n'}{item[0]}</Text>
+                                <Text>{'\n'}Tel: {item[4]}</Text>
                             </View>
                         </View>
                     ))}
