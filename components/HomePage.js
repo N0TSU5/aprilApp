@@ -221,14 +221,10 @@ const HomePage = () => {
             {relative == "in" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-<<<<<<< Updated upstream
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
                     </TouchableOpacity>
-=======
-                    <Text style={greetStyles.countdown}>Day {Math.abs(diff)+1} of {tourname}</Text>
->>>>>>> Stashed changes
                 </>
             )}
 
