@@ -42,6 +42,7 @@ const HomePage = () => {
     const [hrDiff, setHrDiff] = useState();
     const [sHrDiff, setSHDiff] = useState();
     const [partOfDay, setDayPart] = useState();
+    const [itinerary, setList] = useState([])
 
     useEffect(() => {
         const db = new PouchDB('userDB');
@@ -51,11 +52,16 @@ const HomePage = () => {
                 setDeparture(firstDoc.data.datedeparture);
                 setReturned(firstDoc.data.datereturn);
                 setTourName(firstDoc.data.tourname);
+                const itineraryObj = firstDoc.data.itinerary
+                setList(Object.keys(itineraryObj).map(key => itineraryObj[key]))
             })
             .catch((err) => {
                 console.error("home page error", err);
-            });
+            }); 
     }, []);
+    useEffect(() => {
+        console.log("ititn",itinerary);
+      }, [itinerary]);
 
     useEffect(() => {
 
@@ -89,6 +95,32 @@ const HomePage = () => {
 
     }, [[returned, departure]]);
 
+    const formattedList = []
+    /*useEffect(() => {
+
+        const currentItem = itinerary[diff]
+        const currentLocation = currentItem.description
+        const itemDate = moment(currentItem.datestart).format('dddd D MMMM')
+        const itemIndex = diff + 1
+        const itemFooter = (currentItem.footer === null) ? '' : currentItem.footer
+
+        let itemDescription = ''
+        for (let j = 0; j < currentItem.length; j++) {
+            const cDesc = currentItem[j].description
+            if (cDesc !== currentLocation) {
+                itemDescription += cDesc
+            } else if (cDesc.length > 30) {
+                itemDescription += cDesc
+            }
+        }
+
+        if (currentLocation.length < 30) {
+            formattedList.push([itemIndex, itemDate, currentLocation, itemDescription, itemFooter])
+        } else {
+            formattedList.push([itemIndex, itemDate, "", itemDescription, itemFooter])
+        }
+    }, [itinerary, diff])*/
+
     const dayNoun = (diff == 1) ? 'day' : 'days';
     const hourPhrase = (diff > 0) ? `in ${diff} ${dayNoun}` : "tomorrow"
 
@@ -106,7 +138,10 @@ const HomePage = () => {
             {relative == "in" && (
                 <>
                     <Text style={greetStyles.greeting}>Good {partOfDay}, </Text>
-                    <Text style={greetStyles.countdown}>Day {Math.abs(diff)+1} of {tourname}</Text>
+                    <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
+                    <TouchableOpacity style={greetStyles.viewDoc}>
+                        <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
+                    </TouchableOpacity>
                 </>
             )}
 
