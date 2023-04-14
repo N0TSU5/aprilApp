@@ -38,10 +38,10 @@ const HomeDrawer = () => {
             <Drawer.Screen name="Home" component={HomePage} />
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
+            <Drawer.Screen name="Inclusions" component={Footnotes} />
             <Drawer.Screen name="Accommodation" component={Accomodation} />
             <Drawer.Screen name="Key Contacts" component={KeyContacts} />
             <Drawer.Screen name="Tips" component={Tips} />
-            <Drawer.Screen name="Footnotes" component={Footnotes} />
             <Drawer.Screen name="Map" component={Map} />
         </Drawer.Navigator>
     );
