@@ -68,7 +68,7 @@ const Tips = () => {
                             <RenderHTML source={{ html: item }} contentWidth={width} />
                         </View>
                     ))}
-                    </ScrollView>
+                </ScrollView>
             )}
         </React.Fragment>
     )

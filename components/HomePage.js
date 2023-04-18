@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import moment from 'moment-timezone';
 import RenderHTML from 'react-native-render-html';
+import { DrawerActions } from '@react-navigation/native';
 import PouchDB from 'pouchdb-react-native';
 import "../ignoreWarnings";
 import { useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import PurpleLogo from '../assets/greyLogo.png';
 import {
     View,
     Image,
@@ -101,7 +101,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2019-09-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2019-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 
@@ -162,7 +162,7 @@ const HomePage = () => {
             const itemDate = moment(currentItem[0].datestart).format('dddd D MMMM');
             const itemIndex = i + 1
             const itemFooter = (currentItem[0].footer === null) ? '' : currentItem[0].footer
-console.log(currentLocation)
+
             let itemDescription = ''
             for (let j = 0; j < currentItem.length; j++) {
                 const cDesc = currentItem[j].description
@@ -220,7 +220,7 @@ console.log(currentLocation)
 
             {relative == "in" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcome </Text>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
@@ -228,8 +228,8 @@ console.log(currentLocation)
                 </>
             )}
 
-            <TouchableOpacity style={buttonStyles.button} onPress={logNav}>
-                <Text style={buttonStyles.buttontext}>Log Out</Text>
+            <TouchableOpacity style={buttonStyles.button} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                <Text style={buttonStyles.buttontext}>Open Menu</Text>
             </TouchableOpacity>
 
         </View>
@@ -241,8 +241,8 @@ const modalStyles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
         padding: 20,
-        width: '80%',
-        height: '60%',
+        width: '100%',
+        height: '75%',
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',

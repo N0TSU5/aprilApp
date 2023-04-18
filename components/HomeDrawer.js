@@ -1,5 +1,9 @@
 import React from "react";
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import HomePage from "./HomePage";
 import IntroDoc from "./IntroDoc"
 import Itinenary from "./Itinenary";
@@ -8,10 +12,29 @@ import Inclusions from "./Inclusions";
 import KeyContacts from "./KeyContacts";
 import Tips from "./Tips";
 import Map from "./Map";
+import LoginPage from './LoginPage'
 
 const Drawer = createDrawerNavigator();
 
 const HomeDrawer = () => {
+    const navigation = useNavigation();
+
+    const clearData = async () => {
+        try {
+            await AsyncStorage.setItem(
+                '@order_id',
+                'null'
+            );
+        } catch (error) {
+            alert('error logging out!');
+        }
+    };
+
+    const handleLogout = () => {
+        clearData();
+        navigation.navigate("Login");
+    }
+
     return (
         <Drawer.Navigator
             initialRouteName="Home"
@@ -43,8 +66,42 @@ const HomeDrawer = () => {
             <Drawer.Screen name="Key Contacts" component={KeyContacts} />
             <Drawer.Screen name="Tips" component={Tips} />
             <Drawer.Screen name="Map" component={Map} />
+            <Drawer.Screen
+                name="Log Out"
+                options={{
+                    drawerLabel: () => (
+                        <TouchableOpacity onPress={handleLogout}>
+                            <Text style={buttonStyles.buttontext}>Log Out</Text>
+                        </TouchableOpacity>
+                    )
+                }}
+                component={LoginPage}
+                headerShown={false}
+            />
         </Drawer.Navigator>
     );
 };
 
-export default HomeDrawer
+const buttonStyles = StyleSheet.create({
+    button: {
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        textAlign: 'center',
+        marginHorizontal: '32%',
+        marginBottom: '5%',
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: 'red',
+    },
+    buttontext: {
+        fontSize: 16,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'red',
+    },
+})
+
+export default HomeDrawer;
