@@ -101,7 +101,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2019-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2020-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 
@@ -176,7 +176,7 @@ const HomePage = () => {
                 formattedList.push([itemIndex, itemDate, currentLocation, itemDescription, itemFooter])
             } else {
                 formattedList.push([itemIndex, itemDate, "", itemDescription, itemFooter])
-            } 
+            }
         }
         setItem(formattedList[day])
         setModalVisible(true)
@@ -199,7 +199,13 @@ const HomePage = () => {
                         <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
                     </View>
                     <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
-                    <ScrollView style={{  borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10}}>                    
+                    <ScrollView 
+                        style={{ borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10 }}
+                        maximumZoomScale={2}
+                        minimumZoomScale={1}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                    >
                         <React.Fragment>
                             <WebDisplay html={item[3]} />
                             <WebDisplay html={item[4]} />
@@ -224,6 +230,16 @@ const HomePage = () => {
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
+                    </TouchableOpacity>
+                </>
+            )}
+
+            {relative == "pst" && (
+                <>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
+                    <Text style={greetStyles.countdown}>{tourname} has ended</Text>
+                    <TouchableOpacity style={greetStyles.viewDoc}>
+                        <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
                     </TouchableOpacity>
                 </>
             )}
@@ -282,36 +298,19 @@ const greetStyles = StyleSheet.create({
 
 const buttonStyles = StyleSheet.create({
     button: {
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        textAlign: 'center',
-        marginHorizontal: '32%',
-        marginBottom: '5%',
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: 'red',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '50%',
+        height: '10%',
+        borderRadius: 25,
+        backgroundColor: 'orange',
+        alignSelf: 'center',
+        marginBottom: '20%'
     },
     buttontext: {
-        fontSize: 16,
-        lineHeight: 21,
+        fontSize: 18,
         fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: 'white',
-    },
-})
-
-const logoStyles = StyleSheet.create({
-    logoContainer: {
-        backgroundColor: 'black',
-    },
-    logo: {
-        borderRadius: 50,
-        resizeMode: 'contain',
-        height: 50,
-        width: 200,
-        alignSelf: 'center',
+        color: '#660033',
     },
 })
 
