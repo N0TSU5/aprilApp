@@ -64,15 +64,20 @@ const Footnotes = () => {
             {isLoading ? (
                 <LoadingScreen />
             ) : (
-        <ScrollView>
-            {footnotes.map((item, index) => (
-                <View style={styles.container} key={index}>
-                    <Text style={styles.title}>{item.section}</Text>
-                    <WebDisplay html={item.lettertext} />
-                </View>
-            ))}
-        </ScrollView>
-        )}
+                <ScrollView
+                    maximumZoomScale={2}
+                    minimumZoomScale={1}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {footnotes.map((item, index) => (
+                        <View style={styles.container} key={index}>
+                            <Text style={styles.title}>{item.section}</Text>
+                            <WebDisplay html={item.lettertext} />
+                        </View>
+                    ))}
+                </ScrollView>
+            )}
         </React.Fragment>
     )
 }

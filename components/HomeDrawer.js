@@ -4,7 +4,7 @@ import HomePage from "./HomePage";
 import IntroDoc from "./IntroDoc"
 import Itinenary from "./Itinenary";
 import Accomodation from "./Accomodation"
-import Footnotes from "./Footnotes";
+import Inclusions from "./Inclusions";
 import KeyContacts from "./KeyContacts";
 import Tips from "./Tips";
 import Map from "./Map";
@@ -38,7 +38,7 @@ const HomeDrawer = () => {
             <Drawer.Screen name="Home" component={HomePage} />
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
-            <Drawer.Screen name="Inclusions" component={Footnotes} />
+            <Drawer.Screen name="Inclusions" component={Inclusions} />
             <Drawer.Screen name="Accommodation" component={Accomodation} />
             <Drawer.Screen name="Key Contacts" component={KeyContacts} />
             <Drawer.Screen name="Tips" component={Tips} />
