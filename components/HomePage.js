@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import moment from 'moment-timezone';
 import RenderHTML from 'react-native-render-html';
+import { DrawerActions } from '@react-navigation/native';
 import PouchDB from 'pouchdb-react-native';
 import "../ignoreWarnings";
 import { useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import PurpleLogo from '../assets/greyLogo.png';
 import {
     View,
     Image,
@@ -101,7 +101,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2019-09-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2020-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 
@@ -162,7 +162,7 @@ const HomePage = () => {
             const itemDate = moment(currentItem[0].datestart).format('dddd D MMMM');
             const itemIndex = i + 1
             const itemFooter = (currentItem[0].footer === null) ? '' : currentItem[0].footer
-console.log(currentLocation)
+
             let itemDescription = ''
             for (let j = 0; j < currentItem.length; j++) {
                 const cDesc = currentItem[j].description
@@ -176,7 +176,7 @@ console.log(currentLocation)
                 formattedList.push([itemIndex, itemDate, currentLocation, itemDescription, itemFooter])
             } else {
                 formattedList.push([itemIndex, itemDate, "", itemDescription, itemFooter])
-            } 
+            }
         }
         setItem(formattedList[day])
         setModalVisible(true)
@@ -199,7 +199,13 @@ console.log(currentLocation)
                         <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
                     </View>
                     <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
-                    <ScrollView style={{  borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10}}>                    
+                    <ScrollView 
+                        style={{ borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10 }}
+                        maximumZoomScale={2}
+                        minimumZoomScale={1}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                    >
                         <React.Fragment>
                             <WebDisplay html={item[3]} />
                             <WebDisplay html={item[4]} />
@@ -220,7 +226,7 @@ console.log(currentLocation)
 
             {relative == "in" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcome </Text>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
@@ -228,8 +234,18 @@ console.log(currentLocation)
                 </>
             )}
 
-            <TouchableOpacity style={buttonStyles.button} onPress={logNav}>
-                <Text style={buttonStyles.buttontext}>Log Out</Text>
+            {relative == "pst" && (
+                <>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
+                    <Text style={greetStyles.countdown}>{tourname} has ended</Text>
+                    <TouchableOpacity style={greetStyles.viewDoc}>
+                        <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
+                    </TouchableOpacity>
+                </>
+            )}
+
+            <TouchableOpacity style={buttonStyles.button} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                <Text style={buttonStyles.buttontext}>Open Menu</Text>
             </TouchableOpacity>
 
         </View>
@@ -241,8 +257,8 @@ const modalStyles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
         padding: 20,
-        width: '80%',
-        height: '60%',
+        width: '100%',
+        height: '75%',
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -282,36 +298,19 @@ const greetStyles = StyleSheet.create({
 
 const buttonStyles = StyleSheet.create({
     button: {
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        textAlign: 'center',
-        marginHorizontal: '32%',
-        marginBottom: '5%',
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: 'red',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '50%',
+        height: '10%',
+        borderRadius: 25,
+        backgroundColor: 'orange',
+        alignSelf: 'center',
+        marginBottom: '20%'
     },
     buttontext: {
-        fontSize: 16,
-        lineHeight: 21,
+        fontSize: 18,
         fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: 'white',
-    },
-})
-
-const logoStyles = StyleSheet.create({
-    logoContainer: {
-        backgroundColor: 'black',
-    },
-    logo: {
-        borderRadius: 50,
-        resizeMode: 'contain',
-        height: 50,
-        width: 200,
-        alignSelf: 'center',
+        color: '#660033',
     },
 })
 

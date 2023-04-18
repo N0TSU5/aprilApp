@@ -51,9 +51,9 @@ const Accomodation = () => {
     }, []);
 
     const formattedList = []
-    for (let i = 0; i < accomList.length; i++){
+    for (let i = 0; i < accomList.length; i++) {
         const currentItem = accomList[i]
-        const address = currentItem.address 
+        const address = currentItem.address
         const dates = currentItem.datestartend
         const first = currentItem.firstdatestart
         const name = currentItem.name
@@ -66,7 +66,12 @@ const Accomodation = () => {
             {isLoading ? (
                 <LoadingScreen />
             ) : (
-                <ScrollView>
+                <ScrollView
+                    maximumZoomScale={2}
+                    minimumZoomScale={1}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
                     <View style={styles.container}>
                         <Text style={styles.instructions}>To call from within the city dial number only. {'\n'}To call from outside the city dial city code (including zero) and number. {'\n'}To call from UK, dial 00 then country code (see below), city code (EXCLUDING zero) and number.</Text>
                     </View>

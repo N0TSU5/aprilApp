@@ -65,7 +65,12 @@ const KeyContacts = () => {
             {isLoading ? (
                 <LoadingScreen />
             ) : (
-                <ScrollView>
+                <ScrollView
+                    maximumZoomScale={2}
+                    minimumZoomScale={1}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
                     {formattedList.map((item, index) => (
                         <View style={styles.container} key={index}>
                             <View>

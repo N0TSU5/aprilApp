@@ -3,7 +3,7 @@ import "../ignoreWarnings";
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
 import moment from 'moment'
-import { Feather } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
 import LoadingScreen from './LoadingScreen';
 import { useWindowDimensions } from 'react-native';
 import {
@@ -12,6 +12,7 @@ import {
     ScrollView,
     TouchableOpacity,
     Modal,
+    FlatList,
     Text
 } from "react-native";
 
@@ -33,7 +34,7 @@ const WebDisplay = React.memo(function WebDisplay({ html }) {
     );
 });
 
-const CollapsibleItem = ({ item }) => {
+const CollapsibleItem = ({ item, disableCollapse }) => {
     const [collapsed, setCollapsed] = useState(true);
     const { width } = useWindowDimensions();
 
@@ -42,11 +43,12 @@ const CollapsibleItem = ({ item }) => {
             activeOpacity={0.8}
             onPress={() => setCollapsed(!collapsed)}
             style={styles.container}
+            disabled={disableCollapse}
         >
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <Feather name={collapsed ? 'chevron-down' : 'chevron-up'} size={24} color="black" />
+                    <Feather name={(disableCollapse) ? 'eye-off' : (collapsed ? 'chevron-down' : 'chevron-up')} size={24} color="black" />
                 </View>
             </View>
             <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', }} contentWidth={width} />
@@ -62,7 +64,7 @@ const CollapsibleItem = ({ item }) => {
 
 const Itinenary = () => {
 
-    const [isLoading, setIsLoading] = useState(true); 
+    const [isLoading, setIsLoading] = useState(true);
     const [itinerary, setList] = useState([])
 
     useEffect(() => {
@@ -125,16 +127,33 @@ const Itinenary = () => {
         }
     }
 
+    const [disableCollapse, setDisableCollapse] = useState(false);
+
+    const handleScroll = (event) => {
+        const { zoomScale } = event.nativeEvent;
+        setDisableCollapse(zoomScale > 1);
+    }
+
+    const renderItem = ({ item }) => (
+        <CollapsibleItem item={item} disableCollapse={disableCollapse} />
+    );
+
+
     return (
         <React.Fragment>
             {isLoading ? (
                 <LoadingScreen />
             ) : (
-                <ScrollView>
-                    {formattedList.map((item, index) => (
-                        <CollapsibleItem item={item} key={index} />
-                    ))}
-                </ScrollView>
+                <FlatList
+                    data={formattedList}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={renderItem}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    maximumZoomScale={2}
+                    minimumZoomScale={1}
+                    onScroll={handleScroll}
+                />
             )}
         </React.Fragment>
     );
