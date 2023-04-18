@@ -11,16 +11,6 @@ import {
 
 const IntroDoc = () => {
 
-    const [scale, setScale] = useState(1);
-
-    const handleZoomIn = () => {
-        setScale(scale => scale + 0.1);
-    };
-
-    const handleZoomOut = () => {
-        setScale(scale => Math.max(scale - 0.1, 0.5));
-    };
-
     const { width } = useWindowDimensions();
     const [letter, setLetter] = useState('')
     const [isLoading, setIsLoading] = useState(true);
@@ -45,7 +35,7 @@ const IntroDoc = () => {
             ) : (
                 <ScrollView
                     maximumZoomScale={2}
-                    minimumZoomScale={0.8}
+                    minimumZoomScale={1}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                 >
