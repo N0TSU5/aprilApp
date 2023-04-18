@@ -48,7 +48,7 @@ const CollapsibleItem = ({ item, disableCollapse }) => {
             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <Feather name={collapsed ? 'chevron-down' : 'chevron-up'} size={24} color="black" />
+                    <Feather name={(disableCollapse) ? 'eye-off' : (collapsed ? 'chevron-down' : 'chevron-up')} size={24} color="black" />
                 </View>
             </View>
             <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', }} contentWidth={width} />
