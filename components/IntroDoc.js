@@ -10,7 +10,17 @@ import {
 } from "react-native";
 
 const IntroDoc = () => {
-    
+
+    const [scale, setScale] = useState(1);
+
+    const handleZoomIn = () => {
+        setScale(scale => scale + 0.1);
+    };
+
+    const handleZoomOut = () => {
+        setScale(scale => Math.max(scale - 0.1, 0.5));
+    };
+
     const { width } = useWindowDimensions();
     const [letter, setLetter] = useState('')
     const [isLoading, setIsLoading] = useState(true);
@@ -33,12 +43,17 @@ const IntroDoc = () => {
             {isLoading ? (
                 <LoadingScreen />
             ) : (
-        <ScrollView>
-            <RenderHTML source={{ html: letter }} tagsStyles={markupStyles} contentWidth={width} />
-        </ScrollView>
+                <ScrollView
+                    maximumZoomScale={2}
+                    minimumZoomScale={0.8}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <RenderHTML source={{ html: letter }} tagsStyles={markupStyles} contentWidth={width} />
+                </ScrollView>
             )}
         </React.Fragment>
-        )
+    )
 }
 
 const markupStyles = StyleSheet.create({
@@ -47,7 +62,7 @@ const markupStyles = StyleSheet.create({
         color: '#333',
         lineHeight: 25,
         marginVertical: 10,
-        marginLeft: 5
+        marginLeft: 12
     },
     h1: {
         fontSize: 30,
