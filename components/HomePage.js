@@ -101,7 +101,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2020-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2019-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 
