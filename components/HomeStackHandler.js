@@ -10,27 +10,35 @@ const HomeStackHandler = ({ navigation, route }) => {
     const token = route.params.sKey
 
     const fetchData = async () => {
-            fetch(`http://137.205.157.163:4375/api/${token}`, {
+        fetch(`http://137.205.157.163:4375/api/bookings`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
             }
-        })
+        }) //tems_order_id
             .then(response => {
-                console.log("response is ",JSON.stringify(response))
-                const json = response
-                setData(json)
+                return response.json();
+            })
+            .then(json => {
+                return json[0].tems_order_id
+            })
+            .then(order_id => {
+                fetch(`http://137.205.157.163:4375/api/bookings/${order_id}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                })
+                    .then(response => {
+                        return response.json()
+                    })
+                    .then(json => {
+                        setData(json)
+                    })
             })
             .catch(error => {
                 console.error("home stack error", error)
             });
-
-       /* try {
-            const response = await fetch(`http://137.205.157.163:4375/bookings/${token}`)
-            const json = await response.json()
-        } catch (error) {
-            console.log("home stack error", error)
-        }*/
     }
 
     const saveData = async () => {
@@ -40,6 +48,7 @@ const HomeStackHandler = ({ navigation, route }) => {
                 _id: uuidv4(),
                 data: data,
             }
+            console.log(doc)
             await db.put(doc)
         } catch (error) {
             console.log("save error:", error)
@@ -47,6 +56,7 @@ const HomeStackHandler = ({ navigation, route }) => {
     }
 
     useEffect(() => {
+        console.log("useefect")
         fetchData();
     }, []);
 

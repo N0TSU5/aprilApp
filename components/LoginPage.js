@@ -79,7 +79,12 @@ const LoginPage = () => {
     })
       .then((response) => response.text())
       .then((data) => {
-        localStore(JSON.parse(data).access_token);
+        const token = JSON.parse(data).access_token
+        if(token !== undefined){
+          localStore(token);
+        } else {
+          alert("Email or code is incorrect!\nPlease try again")
+        }
       })
       .catch((error) => {
         console.error("verify error", error);

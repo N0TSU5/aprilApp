@@ -36,9 +36,9 @@ const Tips = () => {
 
     useEffect(() => {
         const db = new PouchDB('userDB');
-        db.allDocs({ limit: 1, include_docs: true })
+        db.allDocs({ limit: 2, include_docs: true, descending: true, })
             .then((result) => {
-                const firstDoc = result.rows[0].doc;
+                const firstDoc = result.rows[1].doc;
                 const tipObj = firstDoc.data.tips
                 setList(Object.keys(tipObj).map(key => tipObj[key]))
                 setIsLoading(false);

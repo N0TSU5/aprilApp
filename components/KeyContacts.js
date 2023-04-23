@@ -38,9 +38,9 @@ const KeyContacts = () => {
 
     useEffect(() => {
         const db = new PouchDB('userDB');
-        db.allDocs({ limit: 1, include_docs: true })
+        db.allDocs({ limit: 2, include_docs: true, descending: true, })
             .then((result) => {
-                const firstDoc = result.rows[0].doc;
+                const firstDoc = result.rows[1].doc;
                 const conObj = firstDoc.data.keycontacts
                 setList(Object.keys(conObj).map(key => conObj[key]))
                 setIsLoading(false);
