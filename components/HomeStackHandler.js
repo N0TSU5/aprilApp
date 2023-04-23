@@ -44,19 +44,22 @@ const HomeStackHandler = ({ navigation, route }) => {
     const saveData = async () => {
         try {
             const db = new PouchDB('userDB')
-            const doc = {
-                _id: uuidv4(),
-                data: data,
-            }
-            console.log(doc)
-            await db.put(doc)
-        } catch (error) {
-            console.log("save error:", error)
+            await db.destroy().then(() => {
+                const doc = {
+                    _id: uuidv4(),
+                    data: data,
+                }
+                const db2 = new PouchDB('userDB')
+                db2.put(doc)
+                console.log("data added")
+            })            
+        } catch (err) {
+            console.log(err)
         }
     }
 
+
     useEffect(() => {
-        console.log("useefect")
         fetchData();
     }, []);
 

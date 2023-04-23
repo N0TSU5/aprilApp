@@ -73,10 +73,10 @@ const HomeDrawer = () => {
                         <TouchableOpacity onPress={handleLogout}>
                             <Text style={buttonStyles.buttontext}>Log Out</Text>
                         </TouchableOpacity>
-                    )
+                    ),
+                    headerShown: false
                 }}
                 component={LoginPage}
-                headerShown={false}
             />
         </Drawer.Navigator>
     );

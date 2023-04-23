@@ -72,10 +72,9 @@ const HomePage = () => {
 
     useEffect(() => {
         const db = new PouchDB('userDB');
-        db.allDocs({ limit: 2, include_docs: true, descending: true, })
+        db.allDocs({ limit: 1, include_docs: true, descending: false, })
             .then((result) => {
-                const firstDoc = result.rows[1].doc;
-                console.log(firstDoc)
+                const firstDoc = result.rows[0].doc;
                 setDeparture(firstDoc.data.datedeparture);
                 setReturned(firstDoc.data.datereturn);
                 setTourName(firstDoc.data.tourname);
@@ -102,7 +101,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2019-10-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2022-03-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 
@@ -220,14 +219,14 @@ const HomePage = () => {
 
             {relative == "pre" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcomeasdasfds, </Text>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
                     <Text style={greetStyles.countdown}>{tourname}{'\n\n'} begins {hourPhrase}</Text>
                 </>
             )}
 
             {relative == "in" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcomedfgfdg, </Text>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
@@ -237,7 +236,7 @@ const HomePage = () => {
 
             {relative == "pst" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcomergerg, </Text>
+                    <Text style={greetStyles.greeting}>Welcome, </Text>
                     <Text style={greetStyles.countdown}>{tourname} has ended</Text>
                     <TouchableOpacity style={greetStyles.viewDoc}>
                         <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
