@@ -67,16 +67,23 @@ const LoginPage = () => {
   }
 
   const verify = () => {
-    const checkData = userData.users;
-    for (let i = 0; i < checkData.length; i++) {
-      if (email == checkData[i].email && code == checkData[i].code) {
-        let datapoint = JSON.stringify(checkData[i].id)
-        localStore("1026468");
-        return;
-      }
-    }
-    alert("The Email and Authentication code do not match!\nPlease Try again!");
-    setCode();
+    fetch('http://137.205.157.163:4375/api/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: code,
+      }),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        localStore(JSON.parse(data).access_token);
+      })
+      .catch((error) => {
+        console.error("verify error", error);
+      });
   }
 
   return (
