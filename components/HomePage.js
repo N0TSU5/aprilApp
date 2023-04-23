@@ -220,14 +220,14 @@ const HomePage = () => {
 
             {relative == "pre" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
+                    <Text style={greetStyles.greeting}>Welcomeasdasfds, </Text>
                     <Text style={greetStyles.countdown}>{tourname}{'\n\n'} begins {hourPhrase}</Text>
                 </>
             )}
 
             {relative == "in" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
+                    <Text style={greetStyles.greeting}>Welcomedfgfdg, </Text>
                     <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
                     <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
                         <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
@@ -237,7 +237,7 @@ const HomePage = () => {
 
             {relative == "pst" && (
                 <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
+                    <Text style={greetStyles.greeting}>Welcomergerg, </Text>
                     <Text style={greetStyles.countdown}>{tourname} has ended</Text>
                     <TouchableOpacity style={greetStyles.viewDoc}>
                         <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
