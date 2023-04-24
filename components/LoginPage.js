@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import userData from '../database/loginData';
 import BackgroundImage from '../assets/loginBG4.png';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -25,15 +24,19 @@ const LoginPage = () => {
   const [code, setCode] = useState();
 
   useEffect(() => {
-    manageToken = async () => {
-      const token = await AsyncStorage.getItem('@order_id');
-      if (token !== null) {
-        if (token != 'null') {
-          navigation.navigate('MHome', { 'sKey': token });
+    try {
+      manageToken = async () => {
+        const token = await AsyncStorage.getItem('@order_id');
+        if (token !== null) {
+          if (token != 'null') {
+            navigation.navigate('MHome', { 'sKey': token });
+          }
         }
       }
+      manageToken()
+    } catch(error){
+      console.log(error)
     }
-    manageToken()
   }, [])
 
   const localStore = async (value) => {
@@ -80,7 +83,7 @@ const LoginPage = () => {
       .then((response) => response.text())
       .then((data) => {
         const token = JSON.parse(data).access_token
-        if(token !== undefined){
+        if (token !== undefined) {
           localStore(token);
         } else {
           alert("Email or code is incorrect!\nPlease try again")

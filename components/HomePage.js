@@ -39,32 +39,13 @@ const HomePage = () => {
 
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
-
-    const clearData = async () => {
-        try {
-            await AsyncStorage.setItem(
-                '@order_id',
-                'null'
-            );
-        } catch (error) {
-            alert('error logging out!');
-        }
-    };
-
-    const logNav = async () => {
-        clearData()
-        navigation.navigate("Login")
-    }
+    const [logProper, setProper] = useState()
 
     const [tourname, setTourName] = useState()
     const [departure, setDeparture] = useState();
     const [returned, setReturned] = useState();
     const [relative, setRelative] = useState();
     const [diff, setDiff] = useState();
-    const [minDiff, setMinDiff] = useState();
-    const [hrDiff, setHrDiff] = useState();
-    const [sHrDiff, setSHDiff] = useState();
-    const [partOfDay, setDayPart] = useState();
     const [itinerary, setList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
@@ -75,13 +56,13 @@ const HomePage = () => {
         db.allDocs({ limit: 1, include_docs: true, descending: false, })
             .then((result) => {
                 const firstDoc = result.rows[0].doc;
-                console.log(firstDoc.data)
                 setDeparture(firstDoc.data.datedeparture);
                 setReturned(firstDoc.data.datereturn);
                 setTourName(firstDoc.data.tourname);
                 const itineraryObj = firstDoc.data.itinerary
                 setList(Object.keys(itineraryObj).map(key => itineraryObj[key]))
                 setIsLoading(false);
+                console.log(tourname)
             })
             .catch((err) => {
                 console.error("home page error", err);
@@ -97,7 +78,6 @@ const HomePage = () => {
             .catch((err) => {
                 console.error("home page error", err);
             });
-
     }, []);
 
     useEffect(() => {
@@ -105,11 +85,7 @@ const HomePage = () => {
         const date1 = moment.tz('2022-04-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
-
-        setSHDiff(dateE.diff(date1, 'hours'));
-        setHrDiff(date2.diff(date1, 'hours'));
         setDiff((date2.diff(date1, 'days')));
-        setMinDiff((date2.diff(date1, 'minutes')) - (60 * hrDiff));
 
         if (date1.isBefore(departure)) {
             setRelative('pre');
@@ -119,15 +95,6 @@ const HomePage = () => {
             }
         } else if (date1.isAfter(departure) && date1.isBefore(returned)) {
             setRelative("in");
-        }
-
-        let currentHour = date1.hour()
-        if (currentHour < 12 && currentHour >= 5) {
-            setDayPart('morning')
-        } else if (currentHour < 20 && currentHour >= 12) {
-            setDayPart('afternoon')
-        } else if (currentHour >= 20 || currentHour < 5) {
-            setDayPart('evening')
         }
 
     }, [[returned, departure]]);
@@ -187,9 +154,7 @@ const HomePage = () => {
     const hourPhrase = (diff > 0) ? `in ${diff} ${dayNoun}` : "tomorrow"
 
     return (
-
         <View style={containerStyles.container}>
-
             <Modal
                 visible={modalVisible}
                 animationType='slide'
@@ -200,7 +165,7 @@ const HomePage = () => {
                         <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
                     </View>
                     <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
-                    <ScrollView 
+                    <ScrollView
                         style={{ borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10 }}
                         maximumZoomScale={2}
                         minimumZoomScale={1}
@@ -218,32 +183,38 @@ const HomePage = () => {
                 </View>
             </Modal>
 
-            {relative == "pre" && (
-                <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
-                    <Text style={greetStyles.countdown}>{tourname}{'\n\n'} begins {hourPhrase}</Text>
-                </>
-            )}
+            {
+                relative == "pre" && (
+                    <>
+                        <Text style={greetStyles.greeting}>Welcome, </Text>
+                        <Text style={greetStyles.countdown}>{tourname}{'\n\n'} begins {hourPhrase}</Text>
+                    </>
+                )
+            }
 
-            {relative == "in" && (
-                <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
-                    <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
-                    <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
-                        <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
-                    </TouchableOpacity>
-                </>
-            )}
+            {
+                relative == "in" && (
+                    <>
+                        <Text style={greetStyles.greeting}>Welcome, </Text>
+                        <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
+                        <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
+                            <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
+                        </TouchableOpacity>
+                    </>
+                )
+            }
 
-            {relative == "pst" && (
-                <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
-                    <Text style={greetStyles.countdown}>{tourname} has ended</Text>
-                    <TouchableOpacity style={greetStyles.viewDoc}>
-                        <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
-                    </TouchableOpacity>
-                </>
-            )}
+            {
+                relative == "pst" && (
+                    <>
+                        <Text style={greetStyles.greeting}>Welcome, </Text>
+                        <Text style={greetStyles.countdown}>{tourname} has ended</Text>
+                        <TouchableOpacity style={greetStyles.viewDoc}>
+                            <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
+                        </TouchableOpacity>
+                    </>
+                )
+            }
 
             <TouchableOpacity style={buttonStyles.button} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                 <Text style={buttonStyles.buttontext}>Open Menu</Text>
@@ -252,6 +223,9 @@ const HomePage = () => {
         </View>
     )
 }
+
+
+
 
 const modalStyles = StyleSheet.create({
     modalContainer: {
