@@ -75,6 +75,7 @@ const HomePage = () => {
         db.allDocs({ limit: 1, include_docs: true, descending: false, })
             .then((result) => {
                 const firstDoc = result.rows[0].doc;
+                console.log(firstDoc.data)
                 setDeparture(firstDoc.data.datedeparture);
                 setReturned(firstDoc.data.datereturn);
                 setTourName(firstDoc.data.tourname);
@@ -101,7 +102,7 @@ const HomePage = () => {
 
     useEffect(() => {
 
-        const date1 = moment.tz('2022-03-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2022-04-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
 

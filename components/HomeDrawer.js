@@ -13,6 +13,7 @@ import KeyContacts from "./KeyContacts";
 import Tips from "./Tips";
 import Map from "./Map";
 import LoginPage from './LoginPage'
+import MainStackHandler from './MainStackHandler'
 
 const Drawer = createDrawerNavigator();
 
@@ -76,7 +77,7 @@ const HomeDrawer = () => {
                     ),
                     headerShown: false
                 }}
-                component={LoginPage}
+                component={MainStackHandler}
             />
         </Drawer.Navigator>
     );
