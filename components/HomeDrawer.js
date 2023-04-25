@@ -16,7 +16,7 @@ import LogFailed from './LogFailed'
 
 const Drawer = createDrawerNavigator();
 
-const HomeDrawer = () => {
+const HomeDrawer = ({ data }) => {
     const navigation = useNavigation();
 
     const clearData = async () => {
@@ -59,7 +59,9 @@ const HomeDrawer = () => {
                 },
             }}
         >
-            <Drawer.Screen name="Home" component={HomePage} />
+            <Drawer.Screen name="Home">
+                {props => <HomePage {...props} data={data} />}
+            </Drawer.Screen>
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
             <Drawer.Screen name="Inclusions" component={Inclusions} />

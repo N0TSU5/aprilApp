@@ -12,23 +12,9 @@ const LoadingScreen = () => {
 
     const navigation = useNavigation();
 
-    const clearData = async () => {
-        try {
-            await AsyncStorage.setItem(
-                '@order_id',
-                'null'
-            );
-            console.log("logged out")
-        } catch (error) {
-            console.log('error logging out!');
-        }
-    };
-
     const handleLogout = () => {
-        clearData();
         navigation.navigate("Login")
     }
-
 
     return (
         <View style={styles.container}>

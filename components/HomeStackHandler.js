@@ -1,12 +1,14 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import DPHome from './HomeDrawer';
+import HomeDrawer from './HomeDrawer';
 import PouchDB from 'pouchdb-react-native';
 import { v4 as uuidv4 } from 'uuid';
+import LoadingScreen from './LoadingScreen'
 
 const HomeStackHandler = ({ navigation, route }) => {
 
     const [data, setData] = useState(null);
+    const [fetched, setFetch] = useState(false)
     const token = route.params.sKey
 
     const fetchData = async () => {
@@ -37,7 +39,7 @@ const HomeStackHandler = ({ navigation, route }) => {
                     })
             })
             .catch(error => {
-                console.error("home stack error", error)
+                console.log("home stack error", error)
             });
     }
 
@@ -51,7 +53,6 @@ const HomeStackHandler = ({ navigation, route }) => {
                 }
                 const db2 = new PouchDB('userDB')
                 db2.put(doc)
-                console.log("data added")
             })            
         } catch (err) {
             console.log(err)
@@ -67,11 +68,11 @@ const HomeStackHandler = ({ navigation, route }) => {
         if (data) {
             saveData();
         }
+        setFetch(true)
+        console.log("home stack done")
     }, [data]);
 
-    return (
-        <DPHome />
-    )
+    return fetched ? <HomeDrawer data={data} /> : <LoadingScreen />;
 }
 
 export default HomeStackHandler
