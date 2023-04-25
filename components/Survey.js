@@ -18,12 +18,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const Survey = () => {
 
-    const [data, setData] = useState();
-    const [answers, setAns] = useState(new Set())
+    const [answers, setAnswers] = useState({})
     const [resId, setResID] = useState()
     const [questions, setQuestions] = useState()
     const [fetchDataPromise, setFetchDataPromise] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedOption, setSelectedOption] = useState(null);
 
     const fetchData = async () => {
 
@@ -73,16 +73,14 @@ const Survey = () => {
     useEffect(() => {
         const promise = fetchData();
         setFetchDataPromise(promise);
-        return () => {
-            promise.abort();
-        };
+        const controller = new AbortController();
+        controller.abort();
     }, []);
 
     const handleAnswer = (response, feedbackresponseline_id) => {
-        setAns(prevAnswers => ({
-            ...prevAnswers,
-            [feedbackresponseline_id]: response
-        }));
+        setSelectedOption(response);
+        console.log(selectedOption)
+        answers[feedbackresponseline_id] = response
         console.log(answers)
     };
 
@@ -98,27 +96,57 @@ const Survey = () => {
                                 <Text style={styles.question}>{item.question}</Text>
                                 <TouchableOpacity onPress={() => handleAnswer('4', item.feedbackresponseline_id)}>
                                     <View style={styles.optionContainer}>
-                                        <Text style={styles.optionText}>Excellent</Text>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '4' && { color: 'blue', fontWeight: 'bold' }]}>Excellent</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => handleAnswer('3', item.feedbackresponseline_id)}>
                                     <View style={styles.optionContainer}>
-                                        <Text style={styles.optionText}>Very Good</Text>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '3' && { color: 'blue', fontWeight: 'bold' }]}>Very Good</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => handleAnswer('2', item.feedbackresponseline_id)}>
                                     <View style={styles.optionContainer}>
-                                        <Text style={styles.optionText}>Good</Text>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '2' && { color: 'blue', fontWeight: 'bold' }]}>Good</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => handleAnswer('1', item.feedbackresponseline_id)}>
                                     <View style={styles.optionContainer}>
-                                        <Text style={styles.optionText}>Satisfactory</Text>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '1' && { color: 'blue', fontWeight: 'bold' }]}>Satisfactory</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => handleAnswer('0', item.feedbackresponseline_id)}>
                                     <View style={styles.optionContainer}>
-                                        <Text style={styles.optionText}>Poor</Text>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '0' && { color: 'blue', fontWeight: 'bold' }]}>Poor</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        {item.response_type == 'I' &&
+                            <View style={styles.questionContainer}>
+                                <Text style={styles.question}>{item.question}</Text>
+                                <TouchableOpacity onPress={() => handleAnswer('4', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '4' && { color: 'blue', fontWeight: 'bold' }]}>Essential</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('3', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '3' && { color: 'blue', fontWeight: 'bold' }]}>Very Important</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('2', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '2' && { color: 'blue', fontWeight: 'bold' }]}>Important</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('1', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '1' && { color: 'blue', fontWeight: 'bold' }]}>Desirable</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('0', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === '0' && { color: 'blue', fontWeight: 'bold' }]}>Passable</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>

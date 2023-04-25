@@ -75,12 +75,11 @@ const HomePage = () => {
                 workDate()
             })
             .catch((err) => {
-                console.error("home page error", err);
+                console.log("home page error", err);
             });
-    }, []);
+    });
 
     const workDate = () => {
-        console.log('workdate')
         const date1 = moment.tz('2024-03-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
