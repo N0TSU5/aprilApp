@@ -86,31 +86,36 @@ const Survey = () => {
 
     const handleOnSubmit = async () => {
         try {
-          const token = await AsyncStorage.getItem('@order_id');
-          const formattedList = list.map((item) => ({
-            feedbackresponseline_id: item.orderids,
-            response: item.values,
-          }));
-          const payload = {
-            tems_feedbackresponse_id: orderID,
-            questions: formattedList,
-          };
-          const response = await fetch('http://137.205.157.163:4375/api/bookings', {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-          });
-          if (!response.ok) {
-            throw new Error('Failed to submit feedback');
-          }
+
+            const token = await AsyncStorage.getItem('@order_id');
+            const formattedEntries = Object.entries(answers)
+
+            const formattedList = formattedEntries.map((item) => ({
+                feedbackresponseline_id: item[0],
+                response: item[1],
+            }));
+
+            const payload = {
+                tems_feedbackresponse_id: orderID,
+                questions: formattedList,
+            };
+
+            const response = await fetch('http://137.205.157.163:4375/api/bookings', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to submit feedback');
+            }
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
-      
+    };
+
 
     return (
         <ScrollView style={styles.container}>
