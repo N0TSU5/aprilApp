@@ -77,7 +77,7 @@ const HomePage = () => {
             .catch((err) => {
                 console.log("home page error", err);
             });
-    });
+    },);
 
     const workDate = () => {
         const date1 = moment.tz('2024-03-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
@@ -194,7 +194,18 @@ const HomePage = () => {
                     >
                         <Survey />
 
-                        <Button title="Close" onPress={() => setSurveyVisible(false)} />
+                        <Button style={{
+                            backgroundColor: '#007AFF',
+                            borderRadius: 10,
+                            paddingVertical: 10,
+                            paddingHorizontal: 20,
+                            marginTop: 20,
+                        }}
+                            titleStyle={{
+                                color: '#FFF',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                            }} title="Close" onPress={() => setSurveyVisible(false)} />
                     </Modal>
 
                     {

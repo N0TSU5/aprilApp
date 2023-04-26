@@ -23,7 +23,8 @@ const Survey = () => {
     const [questions, setQuestions] = useState()
     const [fetchDataPromise, setFetchDataPromise] = useState();
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [questionLength, setLength] = useState()
+    const [orderID, setOrder] = useState()
 
     const fetchData = async () => {
 
@@ -42,6 +43,7 @@ const Survey = () => {
                 return json[0].tems_order_id
             })
             .then(order_id => {
+                setOrder(order_id)
                 fetch(`http://137.205.157.163:4375/api/feedback/${order_id}`, {
                     method: "GET",
                     headers: {
@@ -53,6 +55,7 @@ const Survey = () => {
                     })
                     .then(data => {
                         setResID(data.tems_feedbackresponse_id)
+                        setLength(data.questions.length - 1)
                         return data.questions
                     })
                     .then(unformattedQuestions => {
@@ -78,11 +81,36 @@ const Survey = () => {
     }, []);
 
     const handleAnswer = (response, feedbackresponseline_id) => {
-        setSelectedOption(response);
-        console.log(selectedOption)
         answers[feedbackresponseline_id] = response
-        console.log(answers)
     };
+
+    const handleOnSubmit = async () => {
+        try {
+          const token = await AsyncStorage.getItem('@order_id');
+          const formattedList = list.map((item) => ({
+            feedbackresponseline_id: item.orderids,
+            response: item.values,
+          }));
+          const payload = {
+            tems_feedbackresponse_id: orderID,
+            questions: formattedList,
+          };
+          const response = await fetch('http://137.205.157.163:4375/api/bookings', {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          });
+          if (!response.ok) {
+            throw new Error('Failed to submit feedback');
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      
 
     return (
         <ScrollView style={styles.container}>
@@ -151,9 +179,67 @@ const Survey = () => {
                                 </TouchableOpacity>
                             </View>
                         }
+                        {item.response_type == 'Y' &&
+                            <View style={styles.questionContainer}>
+                                <Text style={styles.question}>{item.question}</Text>
+                                <TouchableOpacity onPress={() => handleAnswer('Y', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'Y' && { color: 'blue', fontWeight: 'bold' }]}>Yes</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('N', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'N' && { color: 'blue', fontWeight: 'bold' }]}>No</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        {item.response_type == 'C' &&
+                            <View style={styles.questionContainer}>
+                                <Text style={styles.question}>{item.question}</Text>
+                                <TouchableOpacity onPress={() => handleAnswer('Y', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'Y' && { color: 'blue', fontWeight: 'bold' }]}>Yes</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('N', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'N' && { color: 'blue', fontWeight: 'bold' }]}>No</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('C', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'C' && { color: 'blue', fontWeight: 'bold' }]}>Please check</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        {item.response_type == 'M' &&
+                            <View style={styles.questionContainer}>
+                                <Text style={styles.question}>{item.question}</Text>
+                                <TouchableOpacity onPress={() => handleAnswer('Y', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'Y' && { color: 'blue', fontWeight: 'bold' }]}>Yes</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('M', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'M' && { color: 'blue', fontWeight: 'bold' }]}>Maybe</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAnswer('N', item.feedbackresponseline_id)}>
+                                    <View style={styles.optionContainer}>
+                                        <Text style={[styles.optionText, answers[item.feedbackresponseline_id] === 'N' && { color: 'blue', fontWeight: 'bold' }]}>No</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        }
                     </>
                 ))
             )}
+            <TouchableOpacity onPress={handleOnSubmit} style={styles.submitButton}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 }
@@ -163,7 +249,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingHorizontal: 20,
-        paddingVertical: 40,
+        marginTop: 40,
     },
     title: {
         fontSize: 24,
@@ -197,6 +283,18 @@ const styles = StyleSheet.create({
         color: '#444',
         fontSize: 18,
         textAlign: 'center',
+    },
+    submitButton: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    submitButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
     },
 });
 
