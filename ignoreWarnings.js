@@ -11,7 +11,9 @@ if (__DEV__) {
     "Non-serializable values were found in the navigation state.",
     "VirtualizedLists should never be nested inside plain ScrollViews",
     'Each child in a list should have a unique "key" prop',
-    "AsyncStorage has been extracted from react-native core and will be removed in a future release."
+    "AsyncStorage has been extracted from react-native core and will be removed in a future release.",
+    "Objects are not valid as a React child (found: object with keys {_x, _y, _z, _A}). If you meant to render a collection of children, use an array instead.",
+
   ];
 
   const warn = console.warn;

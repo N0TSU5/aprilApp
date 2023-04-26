@@ -5,6 +5,8 @@ import RenderHTML from 'react-native-render-html';
 import { DrawerActions } from '@react-navigation/native';
 import PouchDB from 'pouchdb-react-native';
 import "../ignoreWarnings";
+import LoadingScreen from './LoadingScreen';
+import Survey from './Survey'
 import { useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -12,6 +14,7 @@ import {
     Image,
     Text,
     TouchableOpacity,
+    Button,
     StyleSheet,
     Modal
 } from "react-native";
@@ -39,76 +42,48 @@ const HomePage = () => {
 
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
-
-    const clearData = async () => {
-        try {
-            await AsyncStorage.setItem(
-                '@order_id',
-                'null'
-            );
-        } catch (error) {
-            alert('error logging out!');
-        }
-    };
-
-    const logNav = async () => {
-        clearData()
-        navigation.navigate("Login")
-    }
+    const [isLoading, setIsLoading] = useState(true);
 
     const [tourname, setTourName] = useState()
     const [departure, setDeparture] = useState();
     const [returned, setReturned] = useState();
     const [relative, setRelative] = useState();
     const [diff, setDiff] = useState();
-    const [minDiff, setMinDiff] = useState();
-    const [hrDiff, setHrDiff] = useState();
-    const [sHrDiff, setSHDiff] = useState();
-    const [partOfDay, setDayPart] = useState();
     const [itinerary, setList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
+    const [surveyVisible, setSurveyVisible] = useState(false);
     const [item, setItem] = useState([])
 
     useEffect(() => {
         const db = new PouchDB('userDB');
-        db.allDocs({ limit: 1, include_docs: true, descending: false, })
-            .then((result) => {
-                const firstDoc = result.rows[0].doc;
-                setDeparture(firstDoc.data.datedeparture);
-                setReturned(firstDoc.data.datereturn);
-                setTourName(firstDoc.data.tourname);
-                const itineraryObj = firstDoc.data.itinerary
-                setList(Object.keys(itineraryObj).map(key => itineraryObj[key]))
+        db.allDocs({ limit: 1, include_docs: true, descending: false })
+            .then((result1) => {
+                return result1.rows[0].doc.data;
+            })
+            .then((firstDoc) => {
+                setDeparture(firstDoc.datedeparture);
+                setReturned(firstDoc.datereturn);
+                setTourName(firstDoc.tourname);
+                return firstDoc.itinerary;
+            })
+            .then((itineraryObj) => {
+                const list = Object.keys(itineraryObj).map(key => itineraryObj[key]);
+                setList(list);
                 setIsLoading(false);
             })
-            .catch((err) => {
-                console.error("home page error", err);
-            });
-
-        db.allDocs({ limit: 1, include_docs: true })
-            .then((result) => {
-                const firstDoc = result.rows[0].doc;
-                const itineraryObj = firstDoc.data.itinerary
-                setList(itineraryObj)
-                setIsLoading(false);
+            .then(() => {
+                workDate()
             })
             .catch((err) => {
-                console.error("home page error", err);
+                console.log("home page error", err);
             });
+    },);
 
-    }, []);
-
-    useEffect(() => {
-
-        const date1 = moment.tz('2022-03-16  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+    const workDate = () => {
+        const date1 = moment.tz('2024-03-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
-
-        setSHDiff(dateE.diff(date1, 'hours'));
-        setHrDiff(date2.diff(date1, 'hours'));
         setDiff((date2.diff(date1, 'days')));
-        setMinDiff((date2.diff(date1, 'minutes')) - (60 * hrDiff));
 
         if (date1.isBefore(departure)) {
             setRelative('pre');
@@ -120,16 +95,7 @@ const HomePage = () => {
             setRelative("in");
         }
 
-        let currentHour = date1.hour()
-        if (currentHour < 12 && currentHour >= 5) {
-            setDayPart('morning')
-        } else if (currentHour < 20 && currentHour >= 12) {
-            setDayPart('afternoon')
-        } else if (currentHour >= 20 || currentHour < 5) {
-            setDayPart('evening')
-        }
-
-    }, [[returned, departure]]);
+    }
 
     const renderModal = (day) => {
         const modalList = Object.keys(itinerary).map(key => itinerary[key])
@@ -187,68 +153,101 @@ const HomePage = () => {
 
     return (
 
-        <View style={containerStyles.container}>
+        <>
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (
 
-            <Modal
-                visible={modalVisible}
-                animationType='slide'
-                transparent={true}
-            >
-                <View style={modalStyles.modalContainer}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
-                    </View>
-                    <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
-                    <ScrollView 
-                        style={{ borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10 }}
-                        maximumZoomScale={2}
-                        minimumZoomScale={1}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
+                <View style={containerStyles.container}>
+                    <Modal
+                        visible={modalVisible}
+                        animationType='slide'
+                        transparent={true}
                     >
-                        <React.Fragment>
-                            <WebDisplay html={item[3]} />
-                            <WebDisplay html={item[4]} />
-                        </React.Fragment>
-                    </ScrollView>
-                    <TouchableOpacity onPress={() => setModalVisible(false)}>
-                        <Text style={{ color: 'red', fontSize: 20 }}>{'\n'}Close itinerary</Text>
+                        <View style={modalStyles.modalContainer}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ fontWeight: 'bold', color: '#660033' }}>Day {item[0]}: {item[1]}</Text>
+                            </View>
+                            <RenderHTML source={{ html: item[2] }} baseStyle={{ fontWeight: 'bold', color: '#660033' }} contentWidth={width} />
+                            <ScrollView
+                                style={{ borderLeftColor: 'black', borderLeftWidth: 2, paddingLeft: 10 }}
+                                maximumZoomScale={2}
+                                minimumZoomScale={1}
+                                showsHorizontalScrollIndicator={false}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                <React.Fragment>
+                                    <WebDisplay html={item[3]} />
+                                    <WebDisplay html={item[4]} />
+                                </React.Fragment>
+                            </ScrollView>
+                            <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                <Text style={{ color: 'red', fontSize: 20 }}>{'\n'}Close itinerary</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+                    <Modal
+                        animationType="slide"
+                        visible={surveyVisible}
+                        onRequestClose={() => setSurveyVisible(false)}
+                    >
+                        <Survey />
+
+                        <Button style={{
+                            backgroundColor: '#007AFF',
+                            borderRadius: 10,
+                            paddingVertical: 10,
+                            paddingHorizontal: 20,
+                            marginTop: 20,
+                        }}
+                            titleStyle={{
+                                color: '#FFF',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                            }} title="Close" onPress={() => setSurveyVisible(false)} />
+                    </Modal>
+
+                    {
+                        relative == "pre" && (
+                            <>
+                                <Text style={greetStyles.greeting}>Welcome, </Text>
+                                <Text style={greetStyles.countdown}>{tourname}{'\n\n'} begins {hourPhrase}</Text>
+                            </>
+                        )
+                    }
+
+                    {
+                        relative == "in" && (
+                            <>
+                                <Text style={greetStyles.greeting}>Welcome, </Text>
+                                <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
+                                <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
+                                    <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
+                                </TouchableOpacity>
+                            </>
+                        )
+                    }
+
+                    {
+                        relative == "pst" && (
+                            <>
+                                <Text style={greetStyles.greeting}>Welcome, </Text>
+                                <Text style={greetStyles.countdown}>{tourname} has ended</Text>
+                                <TouchableOpacity style={greetStyles.viewDoc} onPress={() => setSurveyVisible(true)}>
+                                    <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
+                                </TouchableOpacity>
+                            </>
+                        )
+                    }
+
+                    <TouchableOpacity style={buttonStyles.button} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                        <Text style={buttonStyles.buttontext}>Open Menu</Text>
                     </TouchableOpacity>
+
                 </View>
-            </Modal>
-
-            {relative == "pre" && (
-                <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
-                    <Text style={greetStyles.countdown}>{tourname}{'\n\n'} begins {hourPhrase}</Text>
-                </>
             )}
-
-            {relative == "in" && (
-                <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
-                    <Text style={greetStyles.countdown}>Day {Math.abs(diff) + 1} of {tourname}</Text>
-                    <TouchableOpacity style={greetStyles.viewDoc} onPress={() => renderModal(Math.abs(diff))}>
-                        <Text style={greetStyles.viewDocText}>View today's itinerary</Text>
-                    </TouchableOpacity>
-                </>
-            )}
-
-            {relative == "pst" && (
-                <>
-                    <Text style={greetStyles.greeting}>Welcome, </Text>
-                    <Text style={greetStyles.countdown}>{tourname} has ended</Text>
-                    <TouchableOpacity style={greetStyles.viewDoc}>
-                        <Text style={greetStyles.viewDocText}>Please take the time to answer our quick survey</Text>
-                    </TouchableOpacity>
-                </>
-            )}
-
-            <TouchableOpacity style={buttonStyles.button} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                <Text style={buttonStyles.buttontext}>Open Menu</Text>
-            </TouchableOpacity>
-
-        </View>
+        </>
     )
 }
 

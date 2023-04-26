@@ -12,11 +12,11 @@ import Inclusions from "./Inclusions";
 import KeyContacts from "./KeyContacts";
 import Tips from "./Tips";
 import Map from "./Map";
-import LoginPage from './LoginPage'
+import LogFailed from './LogFailed'
 
 const Drawer = createDrawerNavigator();
 
-const HomeDrawer = () => {
+const HomeDrawer = ({ data }) => {
     const navigation = useNavigation();
 
     const clearData = async () => {
@@ -25,6 +25,7 @@ const HomeDrawer = () => {
                 '@order_id',
                 'null'
             );
+            console.log("logged out")
         } catch (error) {
             alert('error logging out!');
         }
@@ -32,7 +33,7 @@ const HomeDrawer = () => {
 
     const handleLogout = () => {
         clearData();
-        navigation.navigate("Login");
+        navigation.navigate("Login")
     }
 
     return (
@@ -58,7 +59,9 @@ const HomeDrawer = () => {
                 },
             }}
         >
-            <Drawer.Screen name="Home" component={HomePage} />
+            <Drawer.Screen name="Home">
+                {props => <HomePage {...props} data={data} />}
+            </Drawer.Screen>
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
             <Drawer.Screen name="Inclusions" component={Inclusions} />
@@ -67,16 +70,19 @@ const HomeDrawer = () => {
             <Drawer.Screen name="Tips" component={Tips} />
             <Drawer.Screen name="Map" component={Map} />
             <Drawer.Screen
-                name="Log Out"
+                name="Logout failed"
                 options={{
                     drawerLabel: () => (
                         <TouchableOpacity onPress={handleLogout}>
                             <Text style={buttonStyles.buttontext}>Log Out</Text>
                         </TouchableOpacity>
                     ),
-                    headerShown: false
+                    headerShown: true,
+                    initialParams: {
+                        logProper: "false",
+                    }
                 }}
-                component={LoginPage}
+                component={LogFailed}
             />
         </Drawer.Navigator>
     );
