@@ -16,6 +16,7 @@ import {
   View,
   Keyboard,
 } from 'react-native';
+// imported dependencies
 
 const LoginPage = () => {
 
@@ -23,12 +24,14 @@ const LoginPage = () => {
   const [email, setEmail] = useState();
   const [code, setCode] = useState();
 
+  // on first render : 
   useEffect(() => {
     try {
       manageToken = async () => {
         const token = await AsyncStorage.getItem('@order_id');
         if (token !== null) {
           if (token != 'null') {
+            // navigates directly to the home page if the user has logged in before
             navigation.navigate('MHome', { 'sKey': token });
           }
         }
@@ -39,15 +42,7 @@ const LoginPage = () => {
     }
   }, [])
 
-  const localStore = async (value) => {
-    try {
-      await AsyncStorage.setItem('@order_id', value);
-      navigation.navigate('MHome', { 'sKey': value });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
+  // checks if the email address is valid before sending it to the API endpoint
   const robustCheck = () => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -69,6 +64,7 @@ const LoginPage = () => {
 
   }
 
+  // sending the email and code to the user
   const verify = () => {
     fetch('http://137.205.157.163:4375/api/auth', {
       method: 'POST',
@@ -92,6 +88,16 @@ const LoginPage = () => {
       .catch((error) => {
         console.error("verify error", error);
       });
+  }
+
+  // stores the local value of the order id to allow for future automatic login
+  const localStore = async (value) => {
+    try {
+      await AsyncStorage.setItem('@order_id', value);
+      navigation.navigate('MHome', { 'sKey': value });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
