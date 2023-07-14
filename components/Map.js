@@ -71,8 +71,8 @@ const Map = () => {
       setInitialRegion({
         latitude: startLatitude,
         longitude: startLongitude,
-        latitudeDelta: 0.9922,
-        longitudeDelta: 0.9421,
+        latitudeDelta: 20,
+        longitudeDelta: 20,
       });
     }
   }, [startLatitude, startLongitude]);

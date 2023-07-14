@@ -25,7 +25,7 @@ const HomeStackHandler = ({ navigation, route }) => {
                 return json[0].tems_order_id
             })
             .then(order_id => {
-                fetch(`http://137.205.157.163:4375/api/bookings/${order_id}`, {
+                fetch(`http://137.205.157.163:4375/api/booking/${order_id}`, {
                     method: "GET",
                     headers: {
                         "Authorization": "Bearer " + token

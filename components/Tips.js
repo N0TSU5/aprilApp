@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "../ignoreWarnings";
+import LoadingScreen from './LoadingScreen';
 import PouchDB from 'pouchdb-react-native';
 import RenderHTML from 'react-native-render-html';
-import LoadingScreen from './LoadingScreen';
 import { useWindowDimensions } from 'react-native';
 import {
     StyleSheet,
@@ -30,49 +30,80 @@ const WebDisplay = React.memo(function WebDisplay({ html }) {
 });
 
 const Tips = () => {
+
+    const [tips, setList] = useState([])
     const [isLoading, setIsLoading] = useState(true);
-    const { width } = useWindowDimensions();
-    const [tipList, setList] = useState([])
 
     useEffect(() => {
         const db = new PouchDB('userDB');
         db.allDocs({ limit: 1, include_docs: true, descending: false, })
             .then((result) => {
                 const firstDoc = result.rows[0].doc;
-                const tipObj = firstDoc.data.tips
-                setList(Object.keys(tipObj).map(key => tipObj[key]))
+                const tipsObj = firstDoc.data.tips
+                setList(Object.keys(tipsObj).map(key => tipsObj[key]))
                 setIsLoading(false);
             })
             .catch((err) => {
-                console.error("contactskey error", err);
+                console.error("tips error", err);
             });
     }, []);
 
-    let formattedList = []
-    for (let i = 0; i < tipList.length; i++) {
-        const currentItem = tipList[i]
-        currentItem.lettertext = currentItem.lettertext.replace(/<font(.*?)>/gi, '<p$1>').replace(/<\/font>/gi, '</p>');
-        currentItem.headline = currentItem.headline.replace(/<font(.*?)>/gi, '<p$1>').replace(/<\/font>/gi, '</p>');
-        formattedList.push(currentItem.headline)
-        formattedList.push(currentItem.lettertext)
+    for (let i = 0; i < tips.length; i++) {
+        if (tips[i].section == null) {
+            tips[i].section = "";
+        }
+        tips[i].section = tips[i].section.replace(/"/g, '\'');
+        tips[i].lettertext = tips[i].lettertext.replace(/"/g, '\'');
+        tips[i].lettertext = tips[i].lettertext.replace(/\n|\r/g, '');
+        tips[i].lettertext = tips[i].lettertext.replace(/\s\s+/g, ' ');
+        tips[i].lettertext = tips[i].lettertext.replace(/<font.*?>/gi, "").replace(/<\/font>/gi, "");
     }
- 
+
     return (
         <React.Fragment>
             {isLoading ? (
                 <LoadingScreen />
             ) : (
-                <ScrollView>
-                    {formattedList.map((item, index) => (
-                        <View>
-                            <RenderHTML source={{ html: item }} contentWidth={width} />
+                <ScrollView
+                    maximumZoomScale={2}
+                    minimumZoomScale={1}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {tips.map((item, index) => (
+                        <View style={styles.container} key={index}>
+                            <Text style={styles.title}>{item.section}</Text>
+                            <WebDisplay html={item.lettertext} />
                         </View>
                     ))}
                 </ScrollView>
             )}
         </React.Fragment>
     )
-
 }
 
-export default Tips
+const styles = StyleSheet.create({
+    container: {
+        padding: 10,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        marginHorizontal: 10,
+        marginTop: 10,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    title: {
+        fontWeight: 'bold',
+        color: '#660033'
+    }
+});
+
+export default Tips;
+
