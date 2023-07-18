@@ -53,6 +53,7 @@ const HomeStackHandler = ({ navigation, route }) => {
                 }
                 const db2 = new PouchDB('userDB')
                 db2.put(doc)
+                console.log(doc)
             })            
         } catch (err) {
             console.log(err)
@@ -69,7 +70,7 @@ const HomeStackHandler = ({ navigation, route }) => {
             saveData();
         }
         setFetch(true)
-        console.log("home stack done")
+        console.log("home stack done",data)
     }, []);
 
     return fetched ? <HomeDrawer data={data} /> : <LoadingScreen />;

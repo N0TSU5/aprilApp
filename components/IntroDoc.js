@@ -17,10 +17,10 @@ const IntroDoc = () => {
 
     useEffect(() => {
         const db = new PouchDB('userDB');
-        db.allDocs({ limit: 1, include_docs: true, descending: false, })
+        db.allDocs({ limit: 1, include_docs: true, descending: true, })
             .then((result) => {
                 const firstDoc = result.rows[0].doc
-                console.log(firstDoc)
+                console.log(firstDoc.data.tourname)
                 setLetter((firstDoc.data.letter));
                 setIsLoading(false);
             })
