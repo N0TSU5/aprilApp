@@ -70,7 +70,7 @@ const HomeStackHandler = ({ navigation, route }) => {
             saveData();
         }
         setFetch(true)
-        console.log("home stack done",data)
+        console.log("home stack done")
     }, []);
 
     return fetched ? <HomeDrawer data={data} /> : <LoadingScreen />;

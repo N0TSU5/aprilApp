@@ -38,7 +38,7 @@ const WebDisplay = React.memo(function WebDisplay({ html }) {
     );
 });
 
-const HomePage = () => {
+const HomePage = React.memo(() => {
 
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
@@ -77,10 +77,10 @@ const HomePage = () => {
             .catch((err) => {
                 console.log("home page error", err);
             });
-    },);
+    }, []);
 
     const workDate = () => {
-        const date1 = moment.tz('2024-03-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
+        const date1 = moment.tz('2022-03-03  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
         const date2 = moment.tz(departure, 'GMT')
         const dateE = moment.tz(returned, 'GMT')
         setDiff((date2.diff(date1, 'days')));
@@ -249,7 +249,7 @@ const HomePage = () => {
             )}
         </>
     )
-}
+})
 
 const modalStyles = StyleSheet.create({
     modalContainer: {
