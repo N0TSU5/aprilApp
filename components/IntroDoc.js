@@ -17,7 +17,7 @@ const IntroDoc = () => {
 
     useEffect(() => {
         const db = new PouchDB('userDB');
-        db.allDocs({ limit: 1, include_docs: true, descending: true, })
+        db.allDocs({ limit: 1, include_docs: true, descending: false, })
             .then((result) => {
                 const firstDoc = result.rows[0].doc
                 console.log(firstDoc.data.tourname)

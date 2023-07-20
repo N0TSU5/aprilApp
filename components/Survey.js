@@ -86,7 +86,7 @@ const Survey = () => {
 
     const handleOnSubmit = async () => {
         try {
-
+                   
             const token = await AsyncStorage.getItem('@order_id');
             const formattedEntries = Object.entries(answers)
 
@@ -99,6 +99,7 @@ const Survey = () => {
                 tems_feedbackresponse_id: orderID,
                 questions: formattedList,
             };
+            console.log(formattedEntries)
 
             const response = await fetch('http://137.205.157.163:4375/api/bookings', {
                 method: 'PATCH',
