@@ -67,6 +67,7 @@ const Survey = () => {
                 tems_feedbackresponse_id: orderID,
                 questions: formattedList,
             };
+            console.log(payload)
             const response = await fetch('http://137.205.157.163:4375/api/booking', {
                 method: 'PATCH',
                 headers: {
