@@ -79,20 +79,23 @@ const HomePage = React.memo(() => {
     }, [departure, returned]);
 
     const workDate = (departure, returned) => {
-        const date1 = moment.tz('2025-03-09 10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT');
+        const dateFormat = moment();
+        const date1 = dateFormat.format('YYYY-MM-DD HH:mm');
         const date2 = moment.tz(departure, 'GMT');
         const dateE = moment.tz(returned, 'GMT');
         const diff = Math.abs(date2.diff(date1, 'days'));
-        setDiff(diff)
+        setDiff(diff);
 
-        if (date1.isBefore(departure)) {
+        const momentDate1 = moment(date1); // Convert date1 to a moment object
+
+        if (momentDate1.isBefore(departure)) {
             setRelative('pre');
-        } else if (date1.isAfter(returned)) {
+        } else if (momentDate1.isAfter(returned)) {
             if (Math.abs(diff) > 0) {
-                setRelative("pst");
+                setRelative('pst');
             }
-        } else if (date1.isAfter(departure) && date1.isBefore(returned)) {
-            setRelative("in");
+        } else if (momentDate1.isAfter(departure) && momentDate1.isBefore(returned)) {
+            setRelative('in');
         }
     };
 
