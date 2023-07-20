@@ -20,7 +20,6 @@ const LoadingScreen = () => {
         <View style={styles.container}>
             <View style={styles.activityContainer}>
                 <ActivityIndicator size="large" color="#660033" />
-                <Text style={styles.text}>Logout failed due to network anomaly.</Text>
                 <Text style={styles.text}>Please logout using the button below.</Text>
             </View>
             <TouchableOpacity style={buttonStyles.button} onPress={handleLogout}>

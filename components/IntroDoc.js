@@ -20,7 +20,7 @@ const IntroDoc = () => {
         db.allDocs({ limit: 1, include_docs: true, descending: false, })
             .then((result) => {
                 const firstDoc = result.rows[0].doc
-                console.log(firstDoc)
+                console.log(firstDoc.data.tourname)
                 setLetter((firstDoc.data.letter));
                 setIsLoading(false);
             })

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +18,11 @@ const Drawer = createDrawerNavigator();
 
 const HomeDrawer = ({ data }) => {
     const navigation = useNavigation();
+    const [refreshed, setRefreshed] = useState(false);
+
+    useEffect(() => {
+        setRefreshed(true);
+    }, []);
 
     const clearData = async () => {
         try {
@@ -59,9 +64,7 @@ const HomeDrawer = ({ data }) => {
                 },
             }}
         >
-            <Drawer.Screen name="Home">
-                {props => <HomePage {...props} data={data} />}
-            </Drawer.Screen>
+            <Drawer.Screen name="Home" component={HomePage} />
             <Drawer.Screen name="Introduction" component={IntroDoc} />
             <Drawer.Screen name="Itinerary" component={Itinenary} />
             <Drawer.Screen name="Inclusions" component={Inclusions} />
@@ -69,23 +72,26 @@ const HomeDrawer = ({ data }) => {
             <Drawer.Screen name="Key Contacts" component={KeyContacts} />
             <Drawer.Screen name="Tips" component={Tips} />
             <Drawer.Screen name="Map" component={Map} />
-            <Drawer.Screen
-                name="Logout failed"
-                options={{
-                    drawerLabel: () => (
-                        <TouchableOpacity onPress={handleLogout}>
-                            <Text style={buttonStyles.buttontext}>Log Out</Text>
-                        </TouchableOpacity>
-                    ),
-                    headerShown: true,
-                    initialParams: {
-                        logProper: "false",
-                    }
-                }}
-                component={LogFailed}
-            />
+            {refreshed && (
+                <Drawer.Screen
+                    name="Logout failed"
+                    options={{
+                        drawerLabel: () => (
+                            <TouchableOpacity onPress={handleLogout}>
+                                <Text style={buttonStyles.buttontext}>Log Out</Text>
+                            </TouchableOpacity>
+                        ),
+                        headerShown: true,
+                        initialParams: {
+                            logProper: "false",
+                        }
+                    }}
+                    component={LogFailed}
+                />
+            )}
         </Drawer.Navigator>
     );
+
 };
 
 const buttonStyles = StyleSheet.create({
@@ -111,3 +117,4 @@ const buttonStyles = StyleSheet.create({
 })
 
 export default HomeDrawer;
+

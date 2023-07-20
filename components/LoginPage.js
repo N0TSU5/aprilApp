@@ -87,6 +87,7 @@ const LoginPage = () => {
       })
       .catch((error) => {
         console.error("verify error", error);
+        alert("Unable to login!")
       });
   }
 

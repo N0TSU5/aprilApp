@@ -38,7 +38,7 @@ const WebDisplay = React.memo(function WebDisplay({ html }) {
     );
 });
 
-const HomePage = () => {
+const HomePage = React.memo(() => {
 
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
@@ -64,26 +64,26 @@ const HomePage = () => {
                 setDeparture(firstDoc.datedeparture);
                 setReturned(firstDoc.datereturn);
                 setTourName(firstDoc.tourname);
+                console.log(departure)
                 return firstDoc.itinerary;
             })
             .then((itineraryObj) => {
                 const list = Object.keys(itineraryObj).map(key => itineraryObj[key]);
                 setList(list);
                 setIsLoading(false);
-            })
-            .then(() => {
-                workDate()
+                workDate(departure, returned);
             })
             .catch((err) => {
                 console.log("home page error", err);
             });
-    },);
+    }, [departure, returned]);
 
-    const workDate = () => {
-        const date1 = moment.tz('2024-03-12  10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT')
-        const date2 = moment.tz(departure, 'GMT')
-        const dateE = moment.tz(returned, 'GMT')
-        setDiff((date2.diff(date1, 'days')));
+    const workDate = (departure, returned) => {
+        const date1 = moment.tz('2025-03-09 10:58 GMT', 'YYYY-MM-DD HH:mm z', 'GMT');
+        const date2 = moment.tz(departure, 'GMT');
+        const dateE = moment.tz(returned, 'GMT');
+        const diff = Math.abs(date2.diff(date1, 'days'));
+        setDiff(diff)
 
         if (date1.isBefore(departure)) {
             setRelative('pre');
@@ -94,8 +94,7 @@ const HomePage = () => {
         } else if (date1.isAfter(departure) && date1.isBefore(returned)) {
             setRelative("in");
         }
-
-    }
+    };
 
     const renderModal = (day) => {
         const modalList = Object.keys(itinerary).map(key => itinerary[key])
@@ -193,19 +192,13 @@ const HomePage = () => {
                         onRequestClose={() => setSurveyVisible(false)}
                     >
                         <Survey />
+                        <TouchableOpacity
+                            style={buttonStyles.closeButton}
+                            onPress={() => setSurveyVisible(false)}
+                        >
+                            <Text style={buttonStyles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
 
-                        <Button style={{
-                            backgroundColor: '#007AFF',
-                            borderRadius: 10,
-                            paddingVertical: 10,
-                            paddingHorizontal: 20,
-                            marginTop: 20,
-                        }}
-                            titleStyle={{
-                                color: '#FFF',
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                            }} title="Close" onPress={() => setSurveyVisible(false)} />
                     </Modal>
 
                     {
@@ -245,11 +238,13 @@ const HomePage = () => {
                         <Text style={buttonStyles.buttontext}>Open Menu</Text>
                     </TouchableOpacity>
 
+                    <Image source={require('../assets/TransindusLogoBlack.png')} style={greetStyles.bottomImage} resizeMode="contain" />
+
                 </View>
             )}
         </>
     )
-}
+})
 
 const modalStyles = StyleSheet.create({
     modalContainer: {
@@ -293,6 +288,14 @@ const greetStyles = StyleSheet.create({
         fontSize: 30,
         textDecorationLine: 'underline',
     },
+    bottomImage: {
+        position: 'absolute',
+        flex: 1,
+        bottom: 5,
+        alignSelf: 'center',
+        width: '70%',
+        height: '10%',
+    },
 })
 
 const buttonStyles = StyleSheet.create({
@@ -304,12 +307,24 @@ const buttonStyles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'orange',
         alignSelf: 'center',
-        marginBottom: '20%'
+        marginBottom: '30%'
     },
     buttontext: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#660033',
+    },
+    closeButton: {
+        backgroundColor: 'red',
+        borderRadius: 20,
+        paddingVertical: '6%',
+        paddingHorizontal: '20%',
+        alignSelf: 'center',
+    },
+    closeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
     },
 })
 
