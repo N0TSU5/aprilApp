@@ -192,19 +192,13 @@ const HomePage = React.memo(() => {
                         onRequestClose={() => setSurveyVisible(false)}
                     >
                         <Survey />
+                        <TouchableOpacity
+                            style={buttonStyles.closeButton}
+                            onPress={() => setSurveyVisible(false)}
+                        >
+                            <Text style={buttonStyles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
 
-                        <Button style={{
-                            backgroundColor: '#007AFF',
-                            borderRadius: 10,
-                            paddingVertical: 10,
-                            paddingHorizontal: 20,
-                            marginTop: 20,
-                        }}
-                            titleStyle={{
-                                color: '#FFF',
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                            }} title="Close" onPress={() => setSurveyVisible(false)} />
                     </Modal>
 
                     {
@@ -319,6 +313,18 @@ const buttonStyles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#660033',
+    },
+    closeButton: {
+        backgroundColor: 'red',
+        borderRadius: 20,
+        paddingVertical: '6%',
+        paddingHorizontal: '20%',
+        alignSelf: 'center',
+    },
+    closeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
     },
 })
 
