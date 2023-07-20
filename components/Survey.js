@@ -53,7 +53,7 @@ const Survey = () => {
             ...prevAnswers,
             [feedbackresponseline_id]: response,
         }));
-        console.log(prevAnswers)
+        console.log(answers)
     }, []);
 
     const handleOnSubmit = useCallback(async () => {
@@ -83,9 +83,12 @@ const Survey = () => {
         }
     }, [answers, orderID]);
 
+    const responseTypeLetters = ['S', 'I', 'Y', 'C', 'M', 'T'];
+
     const renderQuestion = ({ item }) => (
         <View style={styles.questionContainer}>
-            <Text style={styles.question}>{item.question}</Text>
+            {responseTypeLetters.includes(item.response_type) && (
+                <Text style={styles.question}>{item.question}</Text>)}
             {item.response_type === 'S' && renderOption('Excellent', '4', item.feedbackresponseline_id)}
             {item.response_type === 'S' && renderOption('Very Good', '3', item.feedbackresponseline_id)}
             {item.response_type === 'S' && renderOption('Good', '2', item.feedbackresponseline_id)}
