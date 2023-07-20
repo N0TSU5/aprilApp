@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
-        color: '#333', // Updated text color for the question
+        color: '#660033', // Updated text color for the question
     },
     optionContainer: {
         flexDirection: 'row',
