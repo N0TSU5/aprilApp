@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import HomeDrawer from './HomeDrawer';
 import PouchDB from 'pouchdb-react-native';
 import { v4 as uuidv4 } from 'uuid';
-import LoadingScreen from './LoadingScreen';
+import LoadingScreen from './LoadingScreen'
 
 const HomeStackHandler = ({ navigation, route }) => {
+
     const [data, setData] = useState(null);
-    const [fetched, setFetch] = useState(false);
-    const token = route.params.sKey;
+    const [fetched, setFetch] = useState(false)
+    const token = route.params.sKey
 
     const fetchData = async () => {
         fetch(`http://137.205.157.163:4375/api/bookings`, {
@@ -43,26 +44,21 @@ const HomeStackHandler = ({ navigation, route }) => {
     }
 
     const saveData = async () => {
-        return new Promise((resolve, reject) => {
-            try {
-                const db = new PouchDB('userDB');
-                db.destroy().then(() => {
-                    const doc = {
-                        _id: uuidv4(),
-                        data: data,
-                    };
-                    const db2 = new PouchDB('userDB');
-                    db2.put(doc).then(() => {
-                        console.log(doc);
-                        resolve();
-                    });
-                });
-            } catch (err) {
-                console.log(err);
-                reject(err);
-            }
-        });
-    };
+        try {
+            const db = new PouchDB('userDB')
+            await db.destroy().then(() => {
+                const doc = {
+                    _id: uuidv4(),
+                    data: data,
+                }
+                const db2 = new PouchDB('userDB')
+                db2.put(doc)
+            })            
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
     useEffect(() => {
         fetchData();
@@ -70,19 +66,13 @@ const HomeStackHandler = ({ navigation, route }) => {
 
     useEffect(() => {
         if (data) {
-            saveData()
-                .then(() => {
-                    setFetch(true);
-                    console.log('home stack done');
-                })
-                .catch((error) => {
-                    console.log('Error saving data:', error);
-                    setFetch(true); 
-                });
+            saveData();
         }
-    }, [data]);
+        setFetch(true)
+        console.log("home stack done")
+    }, []);
 
     return fetched ? <HomeDrawer data={data} /> : <LoadingScreen />;
-};
+}
 
-export default HomeStackHandler;
+export default HomeStackHandler
