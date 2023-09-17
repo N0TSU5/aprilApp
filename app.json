@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "thc1",
-    "slug": "thc1",
+    "name": "TransIndus",
+    "slug": "TransIndus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/square.png",
+    "icon": "./assets/TLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/square.png",
+      "image": "./assets/TLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,12 +22,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/square.png",
+        "foregroundImage": "./assets/TLogo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.tenator360.thc1"
     },
     "web": {
-      "favicon": "./assets/square.png"
+      "favicon": "./assets/TLogo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5ffe054c-952a-423b-8f76-5b88f80d00ef"
+      }
     }
   }
 }
